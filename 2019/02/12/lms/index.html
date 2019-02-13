@@ -146,13 +146,6 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
@@ -161,6 +154,13 @@
                         
                         <li>
                             <a href="/techshare.github.io/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -232,7 +232,7 @@
 <center>
 <div style="WIDTH: 600px; text-align: left">
 <font size="4"><p>當我們面對一個學習問題，往往會有多個變數影響結果，繼上一篇的內容，考慮影響房將的因素多了一個臥室的數量。</p></font><br>
-<p><img src="/lms/house-price-table.png" alt=""></p>
+<p><img src="/techshare.github.io/2019/02/12/lms/house-price-table.png" alt=""></p>
 <p>
 <font size="4">
 x 變成一個在 $\mathbb{R}^2$ 上二維的向量，就這個例子而言，$x_1^{(i)}$  是第 i 棟房子的居住空間， $x_2^{(i)}$ 是第 i 棟房子的臥室數目。<br>
@@ -285,15 +285,15 @@ $\alpha$叫做 learning rate(學習率) 可看作是每次迭代所走的步伐�
 </font>
 <font size="4">
 如果不是很好懂的話，可以用這張圖來理解
-<img src="https://github.com/crowttt/techshare.github.io/blob/master/sources/gradient_descent.png?raw=true">
+<p><img src="/techshare.github.io/2019/02/12/lms/gradient_descent.png" alt=""></p>
 <p>
 從這個等高線外圍向中心最低點移動，每一步的方向取決於 $J(\theta)$ 的偏微分，單位步長由 $\alpha$ 決定，這輛個值相乘就是一次迭代的移動向量。
 </p><p>還有一個要注意的是，梯度下降算法受局部最低點影響很大。<br>
 看以下這張圖就可以知道</p>
 </font></p>
-<img src="https://github.com/crowttt/techshare.github.io/blob/master/sources/multi_lowest.png?raw=true">
-這張圖有多個局部最低點，有可能最後收斂的地方不是整體最低處，初始值選得不好或是學習率太大都可能有這個問題。
-
+<p><img src="/techshare.github.io/2019/02/12/lms/multi_lowest.png" alt=""></p>
+<p>這張圖有多個局部最低點，有可能最後收斂的地方不是整體最低處，初始值選得不好或是學習率太大都可能有這個問題。<br>
+</p>
 <p><font size="4">我們先考慮一個 training example</font></p>
 <font size="5">
 <p>$$ J(\theta)=(h_\theta(x)-y) $$ <br></p>
@@ -334,7 +334,7 @@ $$  \theta_j:=\theta_j+(\alpha/m)\sum_{i=1}^{m}(y^{(i)}-h_\theta(x^{(x^{(i)})}))
 <p>輸出結果：</p>
 <figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">預測值和實際值的均方差：16.502446538075834</span><br><span class="line">訓練出的參數:[<span class="string">-1</span>.08765893e<span class="string">-01</span>  4.49963616e<span class="string">-02</span> <span class="string">-5</span>.90001520e<span class="string">-03</span>  1.00580201e<span class="string">+00</span></span><br><span class="line">  1.85529797e<span class="string">-01</span>  5.71543749e<span class="string">+00</span> <span class="string">-4</span>.31492354e<span class="string">-03</span> <span class="string">-9</span>.49467745e<span class="string">-01</span></span><br><span class="line">  1.86356208e<span class="string">-01</span> <span class="string">-1</span>.00199510e<span class="string">-02</span> <span class="string">-3</span>.86791856e<span class="string">-01</span>  1.59462870e<span class="string">-02</span></span><br><span class="line"> <span class="string">-4</span>.71816394e<span class="string">-01</span>]</span><br></pre></td></tr></table></figure>
 <p>繪圖結果：<br>
-<img src="https://github.com/crowttt/techshare.github.io/blob/master/sources/lms_plot.png?raw=true"></p>
+<img src="/techshare.github.io/2019/02/12/lms/lms_plot.png" alt=""></p>
 <p>不知道大家覺得這個預測結果則怎麼樣，我是覺得不算太差啦XD</p>
 <p>學習率和迭代次數是我慢慢試出來的，一開始學習率設成 0.1 太大，結果會發散。</p>
 <p>應該有科學的方法知道學習率該設多少，不過那需要更多數學技巧。</p>

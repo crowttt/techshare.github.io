@@ -144,13 +144,6 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
@@ -159,6 +152,13 @@
                         
                         <li>
                             <a href="/techshare.github.io/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -221,8 +221,7 @@
 <h2><span id="引言"> 引言 </span></h2>
 思考一個實際的例子，假設我們有一筆資料，紀錄一個地區的房屋的面積和房價。那麼有沒有辦法用這些資料得到面積和房價之間的關係，也就是說，給定一棟房子的面積，可以預測他的價格。<br><br>
 **
-<!--img src="https://github.com/crowttt/techshare.github.io/blob/master/sources/house-price-table.png?raw=true"-->
-<p><img src="/supervised_learning/house-price-table1.png" alt=""></p>
+<p><img src="/techshare.github.io/2019/02/11/supervised_learning/house-price-table1.png" alt=""></p>
 <p></p><h2><span id="符號定義"> 符號定義 </span></h2><br>
 **<p></p>
 <li>x(i)  :  一個輸入變數 (input variable)</li><br>
@@ -231,10 +230,10 @@
 <li>{x(i), y(i)} , i = {1,2,3…..m}  : 訓練樣本集 (training set)</li><br>
 <li>h (hypothesis) : 經過訓練得來的函式</li><br>
 **
-<p></p><h2><span id="訓練流程">訓練流程</span></h2><br>
-<img src="https://github.com/crowttt/techshare.github.io/blob/master/sources/learning-process.png?raw=true"><br>
-**<br>
-參考上面的流程圖<br><p></p>
+<p></p><h2><span id="訓練流程">訓練流程</span></h2><p></p>
+<p><img src="/techshare.github.io/2019/02/11/supervised_learning/learning-process.png" alt=""></p>
+<p>**<br>
+參考上面的流程圖<br></p>
 <p>Training set 就是訓練樣本集，也就是上面表格列的資訊，將表格裡的資訊輸入 Learning algorithm 後，我們的演算法可以訓練出一組參數，通常用 θ 表示。<br>
 參數 θ 與變數 x 的線性組合就是 hypothesis，一個表達面積與房價之間關係的方程式。</p>
 <p>得到 hypothesis 後帶入 x 也就是房屋面積，便可以估計出 y 房價。<br>
