@@ -3,7 +3,7 @@
 
     <sitemap>
         <loc>https://crowttt.github.io/techshare.github.io/post-sitemap.xml</loc>
-        <lastmod>2019-02-12T15:52:56.471Z</lastmod>
+        <lastmod>2019-02-13T03:26:18.494Z</lastmod>
     </sitemap>
 
     <sitemap>
@@ -12,8 +12,13 @@
     </sitemap>
 
     <sitemap>
+        <loc>https://crowttt.github.io/techshare.github.io/category-sitemap.xml</loc>
+        <lastmod>2019-02-13T03:26:18.494Z</lastmod>
+    </sitemap>
+
+    <sitemap>
         <loc>https://crowttt.github.io/techshare.github.io/tag-sitemap.xml</loc>
-        <lastmod>2019-02-12T15:31:07.020Z</lastmod>
+        <lastmod>2019-02-13T02:47:55.280Z</lastmod>
     </sitemap>
 
 </sitemapindex>
