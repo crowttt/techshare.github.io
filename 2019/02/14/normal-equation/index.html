@@ -153,14 +153,14 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/archive/">Archives</a>
+                            <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/techshare.github.io/about/">About</a>
+                            <a href="/techshare.github.io/archive/">Archives</a>
                         </li>
                         
                     
@@ -216,7 +216,8 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>
+                <font size="4">
+<p style="WIDTH: 100%">
 繼上一篇的內容，使 $J(\theta)$ 值最小的參數可以用梯度下降法算出來，這一篇介紹另一個作法，normal equation（正規化方程）。
 normal equation 在效率表現上最好，而且不需要用到迭代或遞迴，這個算法的邏輯就是 $J(\theta)$ 對 $\theta_j's$ 偏微分等於零，不需要設初始 $\theta$ 向量也不需要設學習率。
 待會看到詳細的數學過程就能看出來，$\theta$ 作為一組未知數向量可以經過一連串線性代數運算被導出。
@@ -299,10 +300,11 @@ $$\nabla_\theta J(\theta)=X^TX\theta-X^T\vec{y}=0$$
 $$ X^TX\theta=X^T\vec{y} $$
 $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
 </p>
-<p></p>
 <h1><span id="結語">結語</span></h1>
 推導結束～～～<br>
 這篇算式超多，寫到眼睛快瞎掉，如果有筆誤歡迎指正
+<p></p>
+</font>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
