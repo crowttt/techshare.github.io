@@ -153,14 +153,14 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/about/">About</a>
+                            <a href="/techshare.github.io/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/techshare.github.io/archive/">Archives</a>
+                            <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
                     
@@ -217,7 +217,7 @@
                 post-container">
 
                 <div style="WIDTH: 100%; text-align: left">
-<p>
+<p style="WIDTH: 100%">
 繼上一篇的內容，使 $J(\theta)$ 值最小的參數可以用梯度下降法算出來，這一篇介紹另一個作法，normal equation（正規化方程）。
 normal equation 在效率表現上最好，而且不需要用到迭代或遞迴，這個算法的邏輯就是 $J(\theta)$ 對 $\theta_j's$ 偏微分等於零，不需要設初始 $\theta$ 向量也不需要設學習率。
 待會看到詳細的數學過程就能看出來，$\theta$ 作為一組未知數向量可以經過一連串線性代數運算被導出。
@@ -225,7 +225,7 @@ normal equation 在效率表現上最好，而且不需要用到迭代或遞迴�
 <h1><span id="some-matrix-fact">Some Matrix Fact</span></h1>
 因為接下來的推導要用到一些矩陣的知識，所以這裡先複習一下，如果線性代數很溜的話可以跳過。
 <p></p><h2><span id="matrix-derivatives">Matrix derivatives</span></h2><p></p>
-<p>
+<p style="WIDTH: 100%">
 對一個函式 $f: \mathbb{R}^{m\times n} \to \mathbb{R}$ 能將一個 $m\times n$ 的矩陣映射到一個實數，我們定義函數 $f$ 的導數對矩陣 A 為：
 </p><p>$$ \nabla_A f(A)= \begin{bmatrix}\frac{\partial f}{\partial A_{11}} &amp; \cdots &amp; \frac{\partial f}{\partial A_{1n}} \\ \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial f}{\partial A_{m1}} &amp; \cdots &amp; \frac{\partial f}{\partial A_{mn}} \\ \end{bmatrix} $$</p>
 <p>$\nabla_A f(A)$ 是一個 $m\times n$ 的矩陣，每個元素(i,j) 是 $\partial f/\partial A_{ij}$</p>
@@ -235,7 +235,7 @@ $$ f(A)= \frac{2}{3} A_{11} + 5{A_{12}}^2 + A_{21} A_{22} $$</p>
 <p>$$ \nabla_A f(A)=\begin{bmatrix} \frac{2}{3} &amp; 10 A_{12} \\ A_{22} &amp; A_{21} \\ \end{bmatrix} $$</p>
 <p></p>
 <p></p><h2><span id="trace">Trace</span></h2><p></p>
-<p>
+<p style="WIDTH: 100%">
 對一個 $n\times n$ 方陣 A，trace 是對角線的元素相加
 $$ trA=\sum_{i=1}^{n}A_{ii} $$
 <li>對一個實數 a，$tr a = a$ </li>
@@ -247,7 +247,7 @@ $$ trA=\sum_{i=1}^{n}A_{ii} $$
 <li>$ traA = atrA $</li>
 </p>
 <p></p><h2><span id="會用到的公式">會用到的公式</span></h2><p></p>
-<p>
+<p style="WIDTH: 100%">
 <ol>
 <li>$\nabla_A trAB=B^T$，這條公式最後會用到，令他為 eq(1)</li>
 <li>$\nabla_{A^T}f(A)=(\nabla_Af(A))^T$</li>
@@ -256,7 +256,7 @@ $$ trA=\sum_{i=1}^{n}A_{ii} $$
 </ol>
 </p>
 <h1><span id="least-squares-revisited">Least squares revisited</span></h1>
-<p>
+<p style="WIDTH: 100%">
 有了以上這些數學工具，現在可以開始來點乾貨了
 </p><p>我們要先將 $J$ 寫成矩陣形式。<br>
 給定一個訓練集，有 m 筆資料，n 個特徵<br>
@@ -290,10 +290,10 @@ $$ \nabla_{A^T}trABA^TC = (CAB+C^TAB^T)^T = (CAB+C^TAB^T)^T = B^TA^TC^T + BA^TC 
 $$\nabla_\theta J(\theta)=X^TX\theta-X^T\vec{y}=0$$<br>
 $$ X^TX\theta=X^T\vec{y} $$<br>
 $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$</p>
+<p></p>
 <h1><span id="結語">結語</span></h1>
 推導結束～～～<br>
 這篇算式超多，寫到眼睛快瞎掉，如果有筆誤歡迎指正
-<p></p>
 </div>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
