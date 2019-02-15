@@ -216,8 +216,7 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <div style="WIDTH: 100%; text-align: left">
-<p style="WIDTH: 100%">
+                <p>
 繼上一篇的內容，使 $J(\theta)$ 值最小的參數可以用梯度下降法算出來，這一篇介紹另一個作法，normal equation（正規化方程）。
 normal equation 在效率表現上最好，而且不需要用到迭代或遞迴，這個算法的邏輯就是 $J(\theta)$ 對 $\theta_j's$ 偏微分等於零，不需要設初始 $\theta$ 向量也不需要設學習率。
 待會看到詳細的數學過程就能看出來，$\theta$ 作為一組未知數向量可以經過一連串線性代數運算被導出。
@@ -225,7 +224,7 @@ normal equation 在效率表現上最好，而且不需要用到迭代或遞迴�
 <h1><span id="some-matrix-fact">Some Matrix Fact</span></h1>
 因為接下來的推導要用到一些矩陣的知識，所以這裡先複習一下，如果線性代數很溜的話可以跳過。
 <p></p><h2><span id="matrix-derivatives">Matrix derivatives</span></h2><p></p>
-<p style="WIDTH: 100%">
+<p>
 對一個函式 $f: \mathbb{R}^{m\times n} \to \mathbb{R}$ 能將一個 $m\times n$ 的矩陣映射到一個實數，我們定義函數 $f$ 的導數對矩陣 A 為：
 </p><p>$$ \nabla_A f(A)= \begin{bmatrix}\frac{\partial f}{\partial A_{11}} &amp; \cdots &amp; \frac{\partial f}{\partial A_{1n}} \\ \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial f}{\partial A_{m1}} &amp; \cdots &amp; \frac{\partial f}{\partial A_{mn}} \\ \end{bmatrix} $$</p>
 <p>$\nabla_A f(A)$ 是一個 $m\times n$ 的矩陣，每個元素(i,j) 是 $\partial f/\partial A_{ij}$</p>
@@ -235,7 +234,7 @@ $$ f(A)= \frac{2}{3} A_{11} + 5{A_{12}}^2 + A_{21} A_{22} $$</p>
 <p>$$ \nabla_A f(A)=\begin{bmatrix} \frac{2}{3} &amp; 10 A_{12} \\ A_{22} &amp; A_{21} \\ \end{bmatrix} $$</p>
 <p></p>
 <p></p><h2><span id="trace">Trace</span></h2><p></p>
-<p style="WIDTH: 100%">
+<p>
 對一個 $n\times n$ 方陣 A，trace 是對角線的元素相加
 $$ trA=\sum_{i=1}^{n}A_{ii} $$
 <li>對一個實數 a，$tr a = a$ </li>
@@ -264,11 +263,11 @@ $$X=\begin{bmatrix} (x^{(1)})^T \\ (x^{(2)})^T \\ \vdots \\ (x^{(m)})^T \end{bma
 <p>注意到，$x^{(j)}$ 's 也是向量，代表特徵。</p>
 <p>$$\vec{y}=\begin{bmatrix} y^{(1)} \\ \vdots \\ y^{(m)} \end{bmatrix}$$</p>
 <p>$h_\theta$向量可寫成 $x^{(i)}$和$\theta$的內積 $h_\theta(x^{(i)}) = (x^{(i)})^T\theta $，因此我們就能知道</p>
-<p style="WIDTH: 100%">
+<p>
 $$ X\theta-\vec{y}=\begin{bmatrix} (x^{(1)})^T\theta \\\ \vdots \\\ (x^{(m)})^T\theta \end{bmatrix} -\begin{bmatrix} y^{(1)} \\\ \vdots \\\ y^{(m)} \end{bmatrix}=\begin{bmatrix} (x^{(1)})^T\theta - y^{(1)} \\\ \vdots \\\ (x^{(m)})^T\theta - y^{(m)} \end{bmatrix}$$
 </p>
 <p>使用向量內積的公式，$z^Tz=\sum_{i=1}^{m}z^2_i$</p>
-<p style="WIDTH: 100%">
+<p>
 $$ \begin{align}\frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) & =\frac{1}{2}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})^2 \\\ 
 & =J(\theta) \end{align} $$
 </p>
@@ -276,7 +275,7 @@ $$ \begin{align}\frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) & =\frac{1}{2}\s
 <p>結合公式 1,2 可以得到以下關係式，令為 eq(2)：<br>
 $$ \nabla_{A^T}trABA^TC = (CAB+C^TAB^T)^T = (CAB+C^TAB^T)^T = B^TA^TC^T + BA^TC $$</p>
 <p>回到 $J(\theta)$</p>
-<p style="WIDTH: 100%">
+<p>
 $$ \begin{align}
 \nabla_\theta J(\theta) & =\nabla_\theta \frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) \\\ 
 & =\frac{1}{2}\nabla_\theta(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\\ 
@@ -286,14 +285,16 @@ $$ \begin{align}
 & =\frac{1}{2}(X^TX\theta + X^TX\theta - 2X^T\vec{y}) \\\ 
 \end{align} $$
 </p>
-<p>第三個等號會成立是因為內積後的結果是實數，$tr(a) = a$</p>
-<p>第五個等號會成立因為 $tr(A) = tr(A^T)$ 所以 $tr(\theta^TX^T\vec{y}) = tr(\vec{y}^TX\theta)$</p>
+<p style="WIDTH: 100%">
+第三個等號會成立是因為內積後的結果是實數，$tr(a) = a$
+</p><p>第五個等號會成立因為 $tr(A) = tr(A^T)$ 所以 $tr(\theta^TX^T\vec{y}) = tr(\vec{y}^TX\theta)$</p>
 <p>最後一個等式比較複雜，我們先看 eq(2) 裡的 $ABA^TC$ 令 $A=\theta$，$A^T=\theta，B=B^T=X^TX，C=I$。</p>
 <p>所以可以把 $\theta^TX^TX\theta$ 寫成 $ABA^TC$，經過 eq(2) 會等於 $X^TX\theta + X^TX\theta$。</p>
 <p>再用 eq(1) 可以把 $tr(y^{-T}X\theta)$ 的微分變成 $X^T\vec{y}$。</p>
 <p>最後因為 $\vec{y}^T\vec{y}$ 和 $\theta$ 無關，所微分為零。</p>
 <p>既然已經得到了 $\nabla_\theta J(\theta)$ 那麼</p>
-<p style="WIDTH: 100%">
+<p></p>
+<p>
 $$\nabla_\theta J(\theta)=X^TX\theta-X^T\vec{y}=0$$
 $$ X^TX\theta=X^T\vec{y} $$
 $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
@@ -302,7 +303,6 @@ $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
 <h1><span id="結語">結語</span></h1>
 推導結束～～～<br>
 這篇算式超多，寫到眼睛快瞎掉，如果有筆誤歡迎指正
-</div>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
