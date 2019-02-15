@@ -263,33 +263,41 @@ $$ trA=\sum_{i=1}^{n}A_{ii} $$
 $$X=\begin{bmatrix} (x^{(1)})^T \\ (x^{(2)})^T \\ \vdots \\ (x^{(m)})^T \end{bmatrix} $$</p>
 <p>注意到，$x^{(j)}$ 's 也是向量，代表特徵。</p>
 <p>$$\vec{y}=\begin{bmatrix} y^{(1)} \\ \vdots \\ y^{(m)} \end{bmatrix}$$</p>
-<p>$h_\theta$向量可寫成 $x^{(i)}$和$\theta$的內積 $h_\theta(x^{(i)}) = (x^{(i)})^T\theta $，因此我們就能知道<br>
-$$ X\theta-\vec{y}=\begin{bmatrix} (x^{(1)})^T\theta \\ \vdots \\ (x^{(m)})^T\theta \end{bmatrix} -\begin{bmatrix} y^{(1)} \\ \vdots \\ y^{(m)} \end{bmatrix}=\begin{bmatrix} (x^{(1)})^T\theta - y^{(1)} \\ \vdots \\ (x^{(m)})^T\theta - y^{(m)} \end{bmatrix}$$</p>
+<p>$h_\theta$向量可寫成 $x^{(i)}$和$\theta$的內積 $h_\theta(x^{(i)}) = (x^{(i)})^T\theta $，因此我們就能知道</p>
+<p style="WIDTH: 100%">
+$$ X\theta-\vec{y}=\begin{bmatrix} (x^{(1)})^T\theta \\\ \vdots \\\ (x^{(m)})^T\theta \end{bmatrix} -\begin{bmatrix} y^{(1)} \\\ \vdots \\\ y^{(m)} \end{bmatrix}=\begin{bmatrix} (x^{(1)})^T\theta - y^{(1)} \\\ \vdots \\\ (x^{(m)})^T\theta - y^{(m)} \end{bmatrix}$$
+</p>
 <p>使用向量內積的公式，$z^Tz=\sum_{i=1}^{m}z^2_i$</p>
-<p>$$ \begin{align}\frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) &amp; =\frac{1}{2}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})^2 \\<br>
-&amp; =J(\theta) \end{align} $$</p>
+<p style="WIDTH: 100%">
+$$ \begin{align}\frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) & =\frac{1}{2}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})^2 \\\ 
+& =J(\theta) \end{align} $$
+</p>
 <p>最後，要使 $J$ 最小，我們計算 $J(\theta)$ 對 $\theta$ 的偏微分</p>
 <p>結合公式 1,2 可以得到以下關係式，令為 eq(2)：<br>
 $$ \nabla_{A^T}trABA^TC = (CAB+C^TAB^T)^T = (CAB+C^TAB^T)^T = B^TA^TC^T + BA^TC $$</p>
 <p>回到 $J(\theta)$</p>
-<p>$$ \begin{align}<br>
-\nabla_\theta J(\theta) &amp; =\nabla_\theta \frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) \\<br>
-&amp; =\frac{1}{2}\nabla_\theta(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\<br>
-&amp; =\frac{1}{2}\nabla_\theta tr(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\<br>
-&amp; =\frac{1}{2}\nabla_\theta(tr\theta^TX^TX\theta - tr(\theta^TX^T\vec{y}) - tr(\vec{y}^TX\theta)+ tr(\vec{y}^T\vec{y})) \\<br>
-&amp; =\frac{1}{2}\nabla_\theta(tr\theta^TX^TX\theta -2tr(\vec{y}^TX\theta) + \vec{y}^T\vec{y}) \\<br>
-&amp; =\frac{1}{2}(X^TX\theta + X^TX\theta - 2X^T\vec{y}) \\<br>
-\end{align} $$</p>
+<p style="WIDTH: 100%">
+$$ \begin{align}
+\nabla_\theta J(\theta) & =\nabla_\theta \frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) \\\ 
+& =\frac{1}{2}\nabla_\theta(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\\ 
+& =\frac{1}{2}\nabla_\theta tr(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\\ 
+& =\frac{1}{2}\nabla_\theta(tr\theta^TX^TX\theta - tr(\theta^TX^T\vec{y}) - tr(\vec{y}^TX\theta)+ tr(\vec{y}^T\vec{y})) \\\ 
+& =\frac{1}{2}\nabla_\theta(tr\theta^TX^TX\theta -2tr(\vec{y}^TX\theta) + \vec{y}^T\vec{y}) \\\ 
+& =\frac{1}{2}(X^TX\theta + X^TX\theta - 2X^T\vec{y}) \\\ 
+\end{align} $$
+</p>
 <p>第三個等號會成立是因為內積後的結果是實數，$tr(a) = a$</p>
 <p>第五個等號會成立因為 $tr(A) = tr(A^T)$ 所以 $tr(\theta^TX^T\vec{y}) = tr(\vec{y}^TX\theta)$</p>
 <p>最後一個等式比較複雜，我們先看 eq(2) 裡的 $ABA^TC$ 令 $A=\theta$，$A^T=\theta，B=B^T=X^TX，C=I$。</p>
 <p>所以可以把 $\theta^TX^TX\theta$ 寫成 $ABA^TC$，經過 eq(2) 會等於 $X^TX\theta + X^TX\theta$。</p>
 <p>再用 eq(1) 可以把 $tr(y^{-T}X\theta)$ 的微分變成 $X^T\vec{y}$。</p>
 <p>最後因為 $\vec{y}^T\vec{y}$ 和 $\theta$ 無關，所微分為零。</p>
-<p>既然已經得到了 $\nabla_\theta J(\theta)$ 那麼<br>
-$$\nabla_\theta J(\theta)=X^TX\theta-X^T\vec{y}=0$$<br>
-$$ X^TX\theta=X^T\vec{y} $$<br>
-$$ \theta = (X^TX)^{-1}-X^T\vec{y} $$</p>
+<p>既然已經得到了 $\nabla_\theta J(\theta)$ 那麼</p>
+<p style="WIDTH: 100%">
+$$\nabla_\theta J(\theta)=X^TX\theta-X^T\vec{y}=0$$
+$$ X^TX\theta=X^T\vec{y} $$
+$$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
+</p>
 <p></p>
 <h1><span id="結語">結語</span></h1>
 推導結束～～～<br>
