@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          normal equation(正規化方程) - Crowttt StudyNote
+          Probabilistic interpretation(機率上的解釋) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/14/normal-equation/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/15/Prob/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('59c9f5381a90c.jpg')
+            background-image: url('my-new-workplace.jpg')
             /*post*/
         
     }
@@ -92,14 +92,14 @@
                             
                               <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
                             
-                              <a class="tag" href="/techshare.github.io/tags/#normal-equation" title="normal-equation">normal-equation</a>
+                              <a class="tag" href="/techshare.github.io/tags/#probability" title="probability">probability</a>
                             
                         </div>
-                        <h1>normal equation(正規化方程)</h1>
+                        <h1>Probabilistic interpretation(機率上的解釋)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-14
+                            2019-02-15
                         </span>
                     </div>
                 
@@ -217,92 +217,56 @@
                 post-container">
 
                 <font size="4">
+<h1><span id="建立假設">建立假設</span></h1>
 <p style="WIDTH: 100%">
-繼上一篇的內容，使 $J(\theta)$ 值最小的參數可以用梯度下降法算出來，這一篇介紹另一個作法，normal equation（正規化方程）。
-normal equation 在效率表現上最好，而且不需要用到迭代或遞迴，這個算法的邏輯就是 $J(\theta)$ 對 $\theta_j's$ 偏微分等於零，不需要設初始 $\theta$ 向量也不需要設學習率。
-待會看到詳細的數學過程就能看出來，$\theta$ 作為一組未知數向量可以經過一連串線性代數運算被導出。
-</p>
-<h1><span id="some-matrix-fact">Some Matrix Fact</span></h1>
-因為接下來的推導要用到一些矩陣的知識，所以這裡先複習一下，如果線性代數很溜的話可以跳過。
-<p></p><h2><span id="matrix-derivatives">Matrix derivatives</span></h2><p></p>
-<p>
-對一個函式 $f: \mathbb{R}^{m\times n} \to \mathbb{R}$ 能將一個 $m\times n$ 的矩陣映射到一個實數，我們定義函數 $f$ 的導數對矩陣 A 為：
-</p><p>$$ \nabla_A f(A)= \begin{bmatrix}\frac{\partial f}{\partial A_{11}} &amp; \cdots &amp; \frac{\partial f}{\partial A_{1n}} \\ \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial f}{\partial A_{m1}} &amp; \cdots &amp; \frac{\partial f}{\partial A_{mn}} \\ \end{bmatrix} $$</p>
-<p>$\nabla_A f(A)$ 是一個 $m\times n$ 的矩陣，每個元素(i,j) 是 $\partial f/\partial A_{ij}$</p>
-<p>舉個例子： $A=\begin{bmatrix} A_{11} &amp; A_{12} \\ A_{21} &amp; A_{22} \\ \end{bmatrix} $ 是一個 $2\times 2$ 的矩陣，函式 $f:\mathbb{R}^{2\times 2}\to \mathbb{R}$ 寫作：<br>
-$$ f(A)= \frac{2}{3} A_{11} + 5{A_{12}}^2 + A_{21} A_{22} $$</p>
-<p>於是</p>
-<p>$$ \nabla_A f(A)=\begin{bmatrix} \frac{2}{3} &amp; 10 A_{12} \\ A_{22} &amp; A_{21} \\ \end{bmatrix} $$</p>
+這篇主要介紹為什麼前幾篇提到的線性迴歸算法或者更特定的說 least-squares cost function J 是一個合理的假設。
+</p><p>我們假設目標函數 $y$ 和 特徵函數 $x$ 的關係如下：<br>
+$$ y^{(i)}=\theta^Tx^{(i)}+\epsilon^{(i)} $$</p>
+<p>假設 $\epsilon^{(i)}$ 指的是 hypothesis 對 $y$ 的估計誤差，其誤差來源可能是應考慮而未考慮的因素，也有可能是隨機誤差。</p>
+<p>我們更近一步假設，$\epsilon^{(i)}$ 是 IID(independently and identically distribution)</p>
+<p>那麼，根據中央極限定理，$\epsilon^{(i)}$ 會成高斯分佈，並且平均值 mean 等於零，變異數 $\sigma^2$。<br>
+我們可以把這些假這表示成：$\mathcal{N}(0,\sigma^2)$</p>
+<p>根據常態分佈的機率密度函數：<br>
+$$ p(x)=\frac{1}{\sqrt{2\pi\sigma^2}}exp(-\frac{(x-\mu)^2}{2\sigma^2}) $$</p>
+<p>x $\epsilon^{(i)}$ 帶入，而且因為 $\mu = 0$，所以<br>
+$$ p(\epsilon^(i))=\frac{1}{\sqrt{2\pi\sigma^2}}exp(-\frac{(\epsilon^{(i)})^2}{2\sigma^2}) $$</p>
+<p>改寫成 $x,y$ 為參數的形式：<br>
+$$ p(y^{(i)}|x^{(i)};\theta)=\frac{1}{\sqrt{2\pi\sigma^2}}exp(-\frac{(y^{(i)}-x^{(i)})^2}{2\sigma^2}) $$</p>
 <p></p>
-<p></p><h2><span id="trace">Trace</span></h2><p></p>
-<p>
-對一個 $n\times n$ 方陣 A，trace 是對角線的元素相加
-$$ trA=\sum_{i=1}^{n}A_{ii} $$
-<li>對一個實數 a，$tr a = a$ </li>
-<li>對兩個矩陣 $A_{m\times n}, B_{n\times m}$ $trAB = trBA$ 這個自己代數字算算看就知道了。</li>
-<li>$trABC = trCAB = trBCA$</li>
-<li>$ABCD = trDABC = trCDAB = trBCDA$</li>
-<li>對 $A$ 為方陣 $trA = trA^T$</li>
-<li>對 $A,B$ 為方陣$tr(A+B)=trA + trB$</li>
-<li>$ traA = atrA $</li>
-</p>
-<p></p><h2><span id="會用到的公式">會用到的公式</span></h2><p></p>
+<h1><span id="似然函數-likelihood-function">似然函數 likelihood function</span></h1>
 <p style="WIDTH: 100%">
-<ol>
-<li>$\nabla_A trAB=B^T$，這條公式最後會用到，令他為 eq(1)</li>
-<li>$\nabla_{A^T}f(A)=(\nabla_Af(A))^T$</li>
-<li>$\nabla_A trABA^TC=CAB+C^TAB^T$</li>
-<li>$\nabla_A \lvert A \rvert = \lvert A \rvert (A^{-1})^T$  </li>
-</ol>
-</p>
-<h1><span id="least-squares-revisited">Least squares revisited</span></h1>
-<p style="WIDTH: 100%">
-有了以上這些數學工具，現在可以開始來點乾貨了
-</p><p>我們要先將 $J$ 寫成矩陣形式。<br>
-給定一個訓練集，有 m 筆資料，n 個特徵<br>
-$$X=\begin{bmatrix} (x^{(1)})^T \\ (x^{(2)})^T \\ \vdots \\ (x^{(m)})^T \end{bmatrix} $$</p>
-<p>注意到，$x^{(j)}$ 's 也是向量，代表特徵。</p>
-<p>$$\vec{y}=\begin{bmatrix} y^{(1)} \\ \vdots \\ y^{(m)} \end{bmatrix}$$</p>
-<p>$h_\theta$向量可寫成 $x^{(i)}$和$\theta$的內積 $h_\theta(x^{(i)}) = (x^{(i)})^T\theta $，因此我們就能知道</p>
-<p>
-$$ X\theta-\vec{y}=\begin{bmatrix} (x^{(1)})^T\theta \\\ \vdots \\\ (x^{(m)})^T\theta \end{bmatrix} -\begin{bmatrix} y^{(1)} \\\ \vdots \\\ y^{(m)} \end{bmatrix}=\begin{bmatrix} (x^{(1)})^T\theta - y^{(1)} \\\ \vdots \\\ (x^{(m)})^T\theta - y^{(m)} \end{bmatrix}$$
-</p>
-<p>使用向量內積的公式，$z^Tz=\sum_{i=1}^{m}z^2_i$</p>
-<p>
-$$ \begin{align}\frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) & =\frac{1}{2}\sum_{i=1}^{m}(h_\theta(x^{(i)})-y^{(i)})^2 \\\ 
-& =J(\theta) \end{align} $$
-</p>
-<p>最後，要使 $J$ 最小，我們計算 $J(\theta)$ 對 $\theta$ 的偏微分</p>
-<p>結合公式 1,2 可以得到以下關係式，令為 eq(2)：<br>
-$$ \nabla_{A^T}trABA^TC = (CAB+C^TAB^T)^T = (CAB+C^TAB^T)^T = B^TA^TC^T + BA^TC $$</p>
-<p>回到 $J(\theta)$</p>
-<p>
-$$ \begin{align}
-\nabla_\theta J(\theta) & =\nabla_\theta \frac{1}{2}(X\theta-\vec{y})^T(X\theta-\vec{y}) \\\ 
-& =\frac{1}{2}\nabla_\theta(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\\ 
-& =\frac{1}{2}\nabla_\theta tr(\theta^TX^TX\theta - \theta^TX^T\vec{y} - \vec{y}^TX\theta + \vec{y}^T\vec{y}) \\\ 
-& =\frac{1}{2}\nabla_\theta(tr\theta^TX^TX\theta - tr(\theta^TX^T\vec{y}) - tr(\vec{y}^TX\theta)+ tr(\vec{y}^T\vec{y})) \\\ 
-& =\frac{1}{2}\nabla_\theta(tr\theta^TX^TX\theta -2tr(\vec{y}^TX\theta) + \vec{y}^T\vec{y}) \\\ 
-& =\frac{1}{2}(X^TX\theta + X^TX\theta - 2X^T\vec{y}) \\\ 
-\end{align} $$
-</p>
-<p style="WIDTH: 100%">
-第三個等號會成立是因為內積後的結果是實數，$tr(a) = a$
-</p><p>第五個等號會成立因為 $tr(A) = tr(A^T)$ 所以 $tr(\theta^TX^T\vec{y}) = tr(\vec{y}^TX\theta)$</p>
-<p>最後一個等式比較複雜，我們先看 eq(2) 裡的 $ABA^TC$ 令 $A=\theta$，$A^T=\theta，B=B^T=X^TX，C=I$。</p>
-<p>所以可以把 $\theta^TX^TX\theta$ 寫成 $ABA^TC$，經過 eq(2) 會等於 $X^TX\theta + X^TX\theta$。</p>
-<p>再用 eq(1) 可以把 $tr(y^{-T}X\theta)$ 的微分變成 $X^T\vec{y}$。</p>
-<p>最後因為 $\vec{y}^T\vec{y}$ 和 $\theta$ 無關，所微分為零。</p>
-<p>既然已經得到了 $\nabla_\theta J(\theta)$ 那麼</p>
+這裡我們先說明一下，上面這個條件機率裡面用的是 ";" 因為 $\theta$ 不是隨機變數而是參數。
+簡單來說就是在固定一個 $\theta$ 的情況下，隨著 $x,y$ 變化所對應的機率變化。
+再白話一點，固定一組參數的情況下，一組特徵值可以導致一組目標值的機率。
+</p><p>比起 $x,y$ 我們更有興趣的是 $\theta$ 所以我們把機率密度函式寫成似然函數 L(likelihood function)<br>
+$$ L(\theta)=L(\theta;x,\vec{y}) $$<br>
+這裡很明顯可以看到，似然函數就是將變數與參數調換，以 $\theta$ 為變數， $x,y$ 為參數。</p>
+<p>因此，在 $x,y,\theta$ 都給定的情況下 $ L(\theta;x,\vec{y})=p(\vec{y}|x;\theta)$ 因為他們指的是同一件事，只是一個機率各自表述。</p>
 <p></p>
 <p>
-$$\nabla_\theta J(\theta)=X^TX\theta-X^T\vec{y}=0$$
-$$ X^TX\theta=X^T\vec{y} $$
-$$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
-</p>
+對一個組有 m 個 training set 的特徵值
+</p><p>$$ \begin{align}<br>
+L(\theta) &amp;=\prod_{i=1}^{m}p(y^{(i)}|x^{(i)};\theta) \\<br>
+&amp; =\prod_{i=1}^{m}\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2})<br>
+\end{align} $$</p>
+<p>為了方便計算，我們對 $L(\theta)$ 取 natrol log</p>
+<p>$$ \begin{align}<br>
+l(\theta)=ln(L(\theta)) &amp;=\sum_{i=1}^{m}\frac{1}{\sqrt{2\pi}\sigma}-\sum_{i=1}^{m}\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2} \\<br>
+&amp; =mln\frac{1}{\sqrt{2\pi}\sigma}-\sum_{i=1}^{m}\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2} \\<br>
+&amp; =mln\frac{1}{\sqrt{2\pi}\sigma}-\frac{1}{\sigma^2}\begin{bmatrix}\frac{1}{2}\sum_{i=1}^{m}(y^{(i)}-\theta^Tx^{(i)})^2\end{bmatrix}<br>
+\end{align} $$</p>
+<p>經過這一串有點囉唆的推導，我們驚喜的發現，中括號裡的東西就是 cost function $J(\theta)$，而且，根據推導出的結果，$J(\theta)$ 越小，機率越大。</p>
+<p></p>
 <h1><span id="總結">總結</span></h1>
-推導結束～～～<br>
-這篇算式超多，寫到眼睛快瞎掉，如果有筆誤歡迎指正
+<p>
+將前面的觀念整理一下：
+我們可以找到一個 $\theta_{max}$ 使 $L(\theta;y|X)$ 達到最大。
+</p><p>在物理上我們可以這樣理解：<br>
+找到一個 $\theta$ ，使得給定一組 X 後，y 會發生的機率達到最⼤。</p>
+<p>而要使 $L(\theta;y|X)$ 最⼤，根據推導出來的結果，就是要使 $J(\theta)$ 最⼩，這恰好和<br>
+我們上一堂課提到的 LMS(least mean square) algorithm 目的相同。</p>
+<p>這種概率假設並不是唯一的，不同情況還會有更適用的假設。<br>
+還有⼀點，$\sigma^2$ 和 $\theta$ 沒有關係，既使不知道變異數，也可以得到一樣的結果。</p>
 <p></p>
 </font>
 <h1><span id="參考資料">參考資料</span></h1>
@@ -327,13 +291,9 @@ $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/15/Prob/" data-toggle="tooltip" data-placement="top" title="Probabilistic interpretation(機率上的解釋)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/12/lms/" data-toggle="tooltip" data-placement="top" title="Linear Regression(線性迴歸)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/14/normal-equation/" data-toggle="tooltip" data-placement="top" title="normal equation(正規化方程)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -379,7 +339,7 @@ $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Some Matrix Fact</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Matrix derivatives</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Trace</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">會用到的公式</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Least squares revisited</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">建立假設</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">似然函數 likelihood function</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
         
         </div>
       </aside>
@@ -401,7 +361,7 @@ $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
                        
                           <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
                         
-                          <a class="tag" href="/techshare.github.io/tags/#normal-equation" title="normal-equation">normal-equation</a>
+                          <a class="tag" href="/techshare.github.io/tags/#probability" title="probability">probability</a>
                         
                     </div>
                 </section>
@@ -436,8 +396,8 @@ $$ \theta = (X^TX)^{-1}-X^T\vec{y} $$
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/14/normal-equation/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/14/normal-equation/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/15/Prob/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/15/Prob/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
