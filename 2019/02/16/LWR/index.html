@@ -146,13 +146,6 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/techshare.github.io/archive/">Archives</a>
                         </li>
                         
@@ -161,6 +154,13 @@
                         
                         <li>
                             <a href="/techshare.github.io/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -220,7 +220,7 @@
 <h1><span id="underfitting-overfitting-欠擬合與過擬合">underfitting ＆ overfitting (欠擬合與過擬合)</span></h1>
 <p>
 先看以下這幾張圖：
-![](/techshare.github.io/2019/02/16/regression/fitting.png)
+![](/techshare.github.io/2019/02/16/LWR/fitting.png)
 </p><p>對這組數據，分佈型態有拋物線的趨勢，向最左邊的圖，用 $y = \theta_0 + \theta_1x 的 hypothesis 無法很好的估計這組數據。</p>
 <p>相反的，如最右邊的圖，針對這組數據我們可以擬合出⼀個五次方的多項式$y = \theta_0 + \theta_1x + \theta_2x^2+ \theta_3x^3 + \theta_4x^4 + \theta_5x^5$去精準的吻合 training set。</p>
 <p>不過這⼜有另外⼀個問題，這樣的估計結果不具有普遍性，只是充分符合 training set 的情況。</p>
