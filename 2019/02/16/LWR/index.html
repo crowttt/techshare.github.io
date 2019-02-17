@@ -146,6 +146,13 @@
 
                         
                         <li>
+                            <a href="/techshare.github.io/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
@@ -154,13 +161,6 @@
                         
                         <li>
                             <a href="/techshare.github.io/about/">About</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/techshare.github.io/archive/">Archives</a>
                         </li>
                         
                     
@@ -218,16 +218,16 @@
 
                 <font size="4">
 <h1><span id="underfitting-overfitting-欠擬合與過擬合">underfitting ＆ overfitting (欠擬合與過擬合)</span></h1>
-<p>
 先看以下這幾張圖：
 ![](/techshare.github.io/2019/02/16/LWR/fitting.png)
-</p><p>對這組數據，分佈型態有拋物線的趨勢，向最左邊的圖，用 $y = \theta_0 + \theta_1x 的 hypothesis 無法很好的估計這組數據。</p>
-<p>相反的，如最右邊的圖，針對這組數據我們可以擬合出⼀個五次方的多項式$y = \theta_0 + \theta_1x + \theta_2x^2+ \theta_3x^3 + \theta_4x^4 + \theta_5x^5$去精準的吻合 training set。</p>
+<p>
+對這組數據，分佈型態有拋物線的趨勢，向最左邊的圖，用 $y = \theta_0 + \theta_1x 的 hypothesis 無法很好的估計這組數據。
+</p><p>相反的，如最右邊的圖，針對這組數據我們可以擬合出⼀個五次方的多項式$y = \theta_0 + \theta_1x + \theta_2x^2+ \theta_3x^3 + \theta_4x^4 + \theta_5x^5$去精準的吻合 training set。</p>
 <p>不過這⼜有另外⼀個問題，這樣的估計結果不具有普遍性，只是充分符合 training set 的情況。</p>
 <p>最左邊的情況稱為欠擬合（underfitting），而最右邊的稱為過擬合（overfitting）<br>
 要解決特徵選擇問題，有許多方法可以用，接下來要講的非參數學習算法就是其中之一。</p>
 <p></p>
-<h1><span id="non-parametric-learning-algorithm非參參數學習算法">non-parametric learning algorithm（非參參數學習算法）</span></h1>
+<h1><span id="non-parametric-learning-algorithm非參數學習算法">non-parametric learning algorithm（非參數學習算法）</span></h1>
 <h2><span id="參數學習-非參數學習">參數學習 ＆ 非參數學習</span></h2>
 <p>
 先定義這個概念：
