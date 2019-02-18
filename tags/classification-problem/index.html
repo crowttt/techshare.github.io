@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          machine learning(機器學習) - Crowttt StudyNote
+          Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/11/supervised_learning/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/tags/classification-problem/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('58f5e08ec5e51.jpg')
-            /*post*/
+            background-image: url('/techshare.github.io/undefined')
+            /*page*/
         
     }
     
@@ -87,18 +87,10 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="post-heading">
-                        <div class="tags">
-                            
-                              <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-                            
-                        </div>
-                        <h1>machine learning(機器學習)</h1>
-                        <h2 class="subheading"></h2>
-                        <span class="meta">
-                            Posted by Crowt on
-                            2019-02-11
-                        </span>
+                    <div class="site-heading">
+                        <h1>＃include&lt;tech.h&gt;</h1>
+                        <!--<hr class="small">-->
+                        <span class="subheading">learning and sharing</span>
                     </div>
                 
 
@@ -201,209 +193,290 @@
 
 
     <!-- Main Content -->
-    <!-- Modify by Yu-Hsuan Yen -->
+    <!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-            <!-- Post Container -->
+<!-- USE SIDEBAR -->
+    <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                <center>
-<div style="WIDTH: 100%; text-align: left">
-<h1><span id="supervised-learning-監督學習">Supervised learning （監督學習）</span></h1>
-** 
-<h2><span id="引言"> 引言 </span></h2>
-思考一個實際的例子，假設我們有一筆資料，紀錄一個地區的房屋的面積和房價。那麼有沒有辦法用這些資料得到面積和房價之間的關係，也就是說，給定一棟房子的面積，可以預測他的價格。<br><br>
-**
-<p><img src="/techshare.github.io/2019/02/11/supervised_learning/house-price-table1.png" alt=""></p>
-<p></p><h2><span id="符號定義"> 符號定義 </span></h2><br>
-**<p></p>
-<li>x(i)  :  一個輸入變數 (input variable)</li><br>
-<li>y(i) :  一個輸出變數 (output variable)</li><br>
-<li>(x(i), y(i)) :  一組訓練樣本 (training example)</li><br>
-<li>{x(i), y(i)} , i = {1,2,3…..m}  : 訓練樣本集 (training set)</li><br>
-<li>h (hypothesis) : 經過訓練得來的函式</li><br>
-**
-<p></p><h2><span id="訓練流程">訓練流程</span></h2><p></p>
-<p><img src="/techshare.github.io/2019/02/11/supervised_learning/learning-process.png" alt=""></p>
-<p>**<br>
-參考上面的流程圖<br></p>
-<p>Training set 就是訓練樣本集，也就是上面表格列的資訊，將表格裡的資訊輸入 Learning algorithm 後，我們的演算法可以訓練出一組參數，通常用 θ 表示。<br>
-參數 θ 與變數 x 的線性組合就是 hypothesis，一個表達面積與房價之間關係的方程式。</p>
-<p>得到 hypothesis 後帶入 x 也就是房屋面積，便可以估計出 y 房價。<br>
-**</p>
-</div>
-</center>
-<center>
-<div style="WIDTH: 600px; text-align: left">
-<h2><span id="問題種類"> 問題種類：</span></h2>
-<li> 回歸問題（regressionproblem）: </li>
-如果目標變數（y）是連續的，像是範例的房價問題，我們稱這個問題是一個回歸問題。
-<li> 分類問題（classification problem）: </li>
-如果目標變數是離散的，（例如給定居區域，求是獨棟還是公寓）則稱這個問題是一個分類問題。
-<p></p><h2><span id="結語">結語</span></h2><br>
-**<br>
-這篇是我的第一篇博客，是我看過使丹佛大學吳恩達博士機器學習公開課的課後筆記。<br>
-也是這一系列機器學習筆記的一個開頭，只是粗略的講一下監督學習是怎麼回事，未來的幾篇會針對具體的演算法做比較詳細的介紹。<br>
-除了上課的內容，我還會加一些說明在我一開始看不懂的地方，還會把數學推導寫得完整一點。<p></p>
-<p>能力有限，水平一般，我努力寫，大家就湊合著看吧XD<br>
-**</p>
-<h1><span id="參考資料">參考資料</span></h1>
-<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf</a></li>
-</div>
-</center>
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+            
                 
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <!-- 归档列表 -->
+            
+            
 
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/12/lms/" data-toggle="tooltip" data-placement="top" title="Linear Regression(線性迴歸)">&larr; Previous Post</a>
-                        </li>
-                    
-                    
+             <!-- 归档列表 -->
+
+            
+            <div class="one-tag-list">
+                <span class="fa fa-calendar-times-o listing-seperator" id="2019">
+                    <span class="tag-text">2019</span>
+                </span>
+                <ul>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-18
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/18/logistic/" style="color: #0085a1">
+                        <span>
+                            Classification and logistic regression(分類問題與邏輯回歸)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-16
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/16/LWR/" style="color: #0085a1">
+                        <span>
+                            Locally weighted linear regression(區域加權線性迴歸)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-15
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/15/Prob/" style="color: #0085a1">
+                        <span>
+                            Probabilistic interpretation(機率上的解釋)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-14
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/14/normal-equation/" style="color: #0085a1">
+                        <span>
+                            normal equation(正規化方程)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-12
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/12/lms/" style="color: #0085a1">
+                        <span>
+                            Linear Regression(線性迴歸)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-11
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/11/supervised_learning/" style="color: #0085a1">
+                        <span>
+                            machine learning(機器學習)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
                 </ul>
-
-                <!-- duoshuo Share start -->
-                
-                <!-- 多说 Share end-->
-
-                <!-- 多说评论框 start -->
-                
-                <!-- 多说评论框 end -->
-
-                <!-- disqus comment start -->
-                <div id="disqus_thread"></div>
-                <script>
-                
-                /**
-                *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-                *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-                /*
-                var disqus_config = function () {
-                this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-                this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                };
-                */
-                (function() { // DON'T EDIT BELOW THIS LINE
-                var d = document, s = d.createElement('script');
-                s.src = 'https://crowtchen.disqus.com/embed.js';
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-                })();
-                </script>
-                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  
-                <!-- disqus comment end -->
             </div>
             
-            <!-- Tabe of Content -->
-            <!-- Table of Contents -->
 
-                
-            <!-- Sidebar Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
 
-                <!-- Featured Tags -->
-                
-                <section>
-                    <!-- no hr -->
-                    <h5><a href="/techshare.github.io/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                       
-                          <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-                        
-                    </div>
-                </section>
-                
-
-                <!-- Friends Blog -->
-                
-                <hr>
-                <h5>FRIENDS</h5>
-                <ul class="list-inline">
-
-                    
-                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
-                    
-                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
-                    
-                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
-                    
-                        <li><a href="#" target="_blank">It Helps SEO</a></li>
-                    
-                </ul>
-                
-            </div>
         </div>
     </div>
-</article>
+</div>
 
+                <!-- 如果开启评论功能 -->
+                
+            </div>
 
+          <!-- Sidebar Container -->
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+        <!-- Featured Tags -->
 
+<section>
+    <!-- no hr -->
+    <h5><a href="/techshare.github.io/tags/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
+            
+            <a href="/techshare.github.io/tags/#linear regression" title="linear regression" rel="2">linear regression</a>
+            
+        
+            
+            <a href="/techshare.github.io/tags/#machine learning" title="machine learning" rel="6">machine learning</a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+</section>
 
-<!-- disqus embedded js code start (one page only need to embed once) -->
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/11/supervised_learning/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/11/supervised_learning/";
+        <hr>
+    
+        <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5><a href="/techshare.github.io/about/">ABOUT ME</a></h5>
+    <div class="short-about">
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<!-- disqus embedded js code start end -->
+        
+            <img id="avatar_pic" src="/techshare.github.io/img/ironman-draw.png">
+        
 
+        
+            <p>Crowttt</p>
+        
 
+        <!-- SNS Link -->
+        <ul class="list-inline">
+            
+            
+            
 
+            
 
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'hover',
-          placement: 'left',
-          icon: 'ℬ'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
+            
 
+            
+                <li>
+                    <a target="_blank" href="https://github.com/crowttt">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+            
+            
+            
+        </ul>
+    </div>
+</section>
+        <hr>
+    
+        
+  <h5>RECENT POSTS
+  <div class="widget">
+    <ul>
+      
+        <li>
+          <a href="/techshare.github.io/2019/02/18/logistic/">Classification and logistic regression(分類問題與邏輯回歸)</a>
+        </li>
+      
+        <li>
+          <a href="/techshare.github.io/2019/02/16/LWR/">Locally weighted linear regression(區域加權線性迴歸)</a>
+        </li>
+      
+        <li>
+          <a href="/techshare.github.io/2019/02/15/Prob/">Probabilistic interpretation(機率上的解釋)</a>
+        </li>
+      
+        <li>
+          <a href="/techshare.github.io/2019/02/14/normal-equation/">normal equation(正規化方程)</a>
+        </li>
+      
+        <li>
+          <a href="/techshare.github.io/2019/02/12/lms/">Linear Regression(線性迴歸)</a>
+        </li>
+      
+    </ul>
+  </div>
+</h5>
+        <hr>
+    
+        <!-- Friends Blog -->
+
+<h5>FRIENDS</h5>
+<ul class="list-inline">
+
+    
+        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+    
+        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+    
+        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+    
+        <li><a href="#" target="_blank">It Helps SEO</a></li>
+    
+</ul>
+
+        <hr>
+    
+        
+    <h5>ARCHIVES</h5>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/techshare.github.io/archives/2019/02/">February 2019</a><span class="archive-list-count">6</span></li></ul>
+    </div>
+
+        <hr>
+    
+        <!-- Categories -->
+
+    <h5>categories
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/techshare.github.io/categories/機器學習/">機器學習</a><span class="category-list-count">4</span></li></ul>
+    </div>
+</h5>
+        <hr>
+    
+</div>
+
+        
+    </div>
+</div>
 
 
     <!-- Footer -->

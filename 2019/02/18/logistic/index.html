@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          machine learning(機器學習) - Crowttt StudyNote
+          Classification and logistic regression(分類問題與邏輯回歸) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/11/supervised_learning/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/18/logistic/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('58f5e08ec5e51.jpg')
+            background-image: url('bg.jpg')
             /*post*/
         
     }
@@ -92,12 +92,16 @@
                             
                               <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
                             
+                              <a class="tag" href="/techshare.github.io/tags/#logistic regression" title="logistic regression">logistic regression</a>
+                            
+                              <a class="tag" href="/techshare.github.io/tags/#classification problem" title="classification problem">classification problem</a>
+                            
                         </div>
-                        <h1>machine learning(機器學習)</h1>
+                        <h1>Classification and logistic regression(分類問題與邏輯回歸)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-11
+                            2019-02-18
                         </span>
                     </div>
                 
@@ -214,60 +218,127 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <center>
-<div style="WIDTH: 100%; text-align: left">
-<h1><span id="supervised-learning-監督學習">Supervised learning （監督學習）</span></h1>
-** 
-<h2><span id="引言"> 引言 </span></h2>
-思考一個實際的例子，假設我們有一筆資料，紀錄一個地區的房屋的面積和房價。那麼有沒有辦法用這些資料得到面積和房價之間的關係，也就是說，給定一棟房子的面積，可以預測他的價格。<br><br>
-**
-<p><img src="/techshare.github.io/2019/02/11/supervised_learning/house-price-table1.png" alt=""></p>
-<p></p><h2><span id="符號定義"> 符號定義 </span></h2><br>
-**<p></p>
-<li>x(i)  :  一個輸入變數 (input variable)</li><br>
-<li>y(i) :  一個輸出變數 (output variable)</li><br>
-<li>(x(i), y(i)) :  一組訓練樣本 (training example)</li><br>
-<li>{x(i), y(i)} , i = {1,2,3…..m}  : 訓練樣本集 (training set)</li><br>
-<li>h (hypothesis) : 經過訓練得來的函式</li><br>
-**
-<p></p><h2><span id="訓練流程">訓練流程</span></h2><p></p>
-<p><img src="/techshare.github.io/2019/02/11/supervised_learning/learning-process.png" alt=""></p>
-<p>**<br>
-參考上面的流程圖<br></p>
-<p>Training set 就是訓練樣本集，也就是上面表格列的資訊，將表格裡的資訊輸入 Learning algorithm 後，我們的演算法可以訓練出一組參數，通常用 θ 表示。<br>
-參數 θ 與變數 x 的線性組合就是 hypothesis，一個表達面積與房價之間關係的方程式。</p>
-<p>得到 hypothesis 後帶入 x 也就是房屋面積，便可以估計出 y 房價。<br>
-**</p>
-</div>
-</center>
-<center>
-<div style="WIDTH: 600px; text-align: left">
-<h2><span id="問題種類"> 問題種類：</span></h2>
-<li> 回歸問題（regressionproblem）: </li>
-如果目標變數（y）是連續的，像是範例的房價問題，我們稱這個問題是一個回歸問題。
-<li> 分類問題（classification problem）: </li>
-如果目標變數是離散的，（例如給定居區域，求是獨棟還是公寓）則稱這個問題是一個分類問題。
-<p></p><h2><span id="結語">結語</span></h2><br>
-**<br>
-這篇是我的第一篇博客，是我看過使丹佛大學吳恩達博士機器學習公開課的課後筆記。<br>
-也是這一系列機器學習筆記的一個開頭，只是粗略的講一下監督學習是怎麼回事，未來的幾篇會針對具體的演算法做比較詳細的介紹。<br>
-除了上課的內容，我還會加一些說明在我一開始看不懂的地方，還會把數學推導寫得完整一點。<p></p>
-<p>能力有限，水平一般，我努力寫，大家就湊合著看吧XD<br>
-**</p>
-<h1><span id="參考資料">參考資料</span></h1>
-<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf</a></li>
-</div>
-</center>
+                <font size="4">
+<h1><span id="分類問題">分類問題</span></h1>
+<p>
+分類問題和之前提過的回歸問題差別在於目標值 y 是離散的。
+</p><p>這裡我們聚焦在 binary classification problem 上。</p>
+<p>例如要建立一個垃圾訊息篩選器，$x^{(i)}$ 可能是某種垃圾訊息的特徵，$y$ 的結果如果符合就為記為 1 ，不符合就記為 0。</p>
+<p>是 1 的話稱為 negative class，0 的話稱為 positive class，有時會用<br>
+“+” , “-” 標記。在給定 x(i) 的情況下，y 被稱為這個 training example<br>
+的標記。</p>
+<p></p>
+<h1><span id="logistic-regression">Logistic regression</span></h1>
+<h2><span id="logistic-function">logistic function</span></h2>
+<p>
+我們改變 hypothesis 的型態
+$$ h_\theta(x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}} $$
+其中
+$$ g(z)=\frac{1}{1+e^{-z}} $$
+稱作 logistic function 或 sigmoid function
+</p><p>Logistic function 畫成圖型長這樣：</p>
+<p><img src="/techshare.github.io/2019/02/18/logistic/logistic-function.png" alt=""></p>
+<p>當 $z\to \infty$ $g(z) \to 1$ ; $z\to -\infty$ $g(z) \to 0$</p>
+<p>也就是說，$g(x)$ 會存在於 $(1,0)$</p>
+<p>仿照之前的做法，$x_0=1$，我們可得到<br>
+$$ \theta^Tx=\sum_{j=0}^{n}\theta_jx_j $$</p>
+<p>h(x) 不一定要用g(x)假設，任何平滑且存在於 (0,1) 的函式都可以，但是g(x) 有⼀些有用的性質，之後討論 GLM 與 generative learning algorithms 時會看到。</p>
+<p>先把 $g(x)$ 的導數算出來擺著，到後面會發現他有一些巧妙的性質：</p>
+<p>$$<br>
+\begin{align}<br>
+g’(z) &amp;=\frac{d}{dz}\frac{1}{1+e^{-z}} \\<br>
+&amp; =\frac{1}{(1+e^{-z})^2}(e^{-z}) \\<br>
+&amp; =\frac{1}{(1+e^{-z})}(1-\frac{1}{1+e^{-z}}) \\<br>
+&amp; =g(z)(1-g(z))<br>
+\end{align}<br>
+$$</p>
+<p></p>
+<p></p><h2><span id="公式推導">公式推導</span></h2><p></p>
+<p>
+<font size="5">
+好了現在問題來了，有了 logistic regression model 我們要怎麼適配出 θ 的組合???
+</font>
+</p><p>根據回歸算法在機率上的假設，最小平方回歸就是最大然似估計(maximum likelihood estimator)</p>
+<p>所以同樣的，我們先賦予分類模型一個機率上的假設，再透過最大然似估計擬合出一組參數。</p>
+<p>我們假設<br>
+$$ P(y=1|x;\theta)=h_\theta (x) $$<br>
+$$ P(y=0|x;\theta)=1-h_\theta (x) $$</p>
+<p>將兩式合併起來<br>
+$$P(y|x;\theta)=h(x)^y(1-h(x))^{1-y} $$</p>
+<p>假設這m 個 training example 都是獨立的，我們可以得到 $\theta$ 的概似函數</p>
+<p>$$<br>
+\begin{align}<br>
+L(\theta) &amp;=p(\vec{y}|x;\theta) \\<br>
+&amp; =\prod_{i=1}^{m}p(\vec{y}^{(i)}|x^{(i)};\theta) \\<br>
+&amp; =\prod_{i=1}^{m}(h(x^{(i)}))^{y^{(i)}}(1-h(x^{(i)}))^{(1-y^{(i)})}<br>
+\end{align}<br>
+$$</p>
+<p>一樣的，我們對 $L(\theta)$ 取 natrol log</p>
+<p>$$<br>
+\begin{align}<br>
+l(\theta)=ln(L(\theta)) \<br>
+=\sum_{i=1}^{m}y^{(i)}ln(h(x^{(i)}))+(1-y^{(i)})ln(1-h(x^{(i)}))<br>
+\end{align}<br>
+$$</p>
+<p></p>
+<p>
+<font size="5">
+現在問題⼜來啦！！！   
+要怎麼把概似函數最大化呢？？？
+</font>
+</p><p>如同我們處理 linear regression ⼀樣，我們使⽤梯度上升算法 (gradient ascent)。</p>
+<p>寫成向量形式後，遞迴式可寫成<br>
+$$ \theta :=\theta + \alpha\nabla_\theta \mathcal{l}(\theta) $$</p>
+<p>這裡我們可以注意到，和 LMS 的梯度下降算法不⼀樣的是這裡是”+”<br>
+不是 “-“ 因為我們要求的是最大概似函數。</p>
+<p>在只有一個 training example 的情況下微分<br>
+$$<br>
+\begin{align}<br>
+\frac{\partial}{\partial \theta_j}\mathcal{l}(\theta) &amp;=\pmatrix{y\frac{1}{g(\theta^Tx)}-(1-y)\frac{1}{1-(g(\theta^Tx))}}\pmatrix{\frac{\partial g(\theta^Tx)}{\partial\theta^T}}  \\<br>
+&amp; =\pmatrix{y\frac{1}{g(\theta^Tx)}-(1-y)\frac{1}{1-(g(\theta^Tx))}}\pmatrix{g(\theta^Tx)(1-g(\theta^Tx))\frac{\partial(\theta^Tx)}{\partial\theta_j}} \\<br>
+&amp; =(y(1-g(\theta^Tx))-(1-y)g(\theta^Tx))x_j \\<br>
+&amp; =(y-g(\theta^Tx))x_j \\<br>
+&amp; =(y-h(x^{(i)}))x_j<br>
+\end{align}<br>
+$$</p>
+<p>第二個等號會成立是因為我們前面寫到的 $g’(z)=g(z)(1-g(z))$。</p>
+<p>第三個等號為什麼外面會掛著一個 $x_j$ 呢？ 因為 $\theta^Tx$ 是兩個向量的內積，內積的結果可以寫成$ \theta_0x_0 + \theta_1x_1 +\cdots + \theta_{n-1}x_{n-1} + \theta_nx_n $。對 $\theta_j$ 微分，除了$\theta_jx_j$ 其他項都是常數，所以微分完就剩下 $x_j$ 。</p>
+<p>最後，根據最後的結果，$\frac{\partial}{\partial\theta_j}l(\theta)=(y-h(x^{(i)}))x_j $。</p>
+<p>帶入梯度上升算法的遞迴式中：<br>
+$$ \theta_j :=\theta_j + \alpha (y^{(i)}-h_\theta (x^{(i)}))x_j^{(i)} $$</p>
+<p>對多個 training example：<br>
+$$ \theta_j :=\theta_j + (\alpha /m)\sum_{i=1}^{m}(y^{(i)}-h_\theta(x^{(i)}))x^{(i)}_j $$</p>
+<p>到此為止推倒完畢。</p>
+<p></p>
+<h1><span id="結論">結論</span></h1>
+<p>
+看到這，我們驚喜的發現，這個遞迴式和 LMS 一樣，但是他們是不同的演算法，原因在於，hypothesis 的定義與 LMS 的不⼀樣，$h(x^{(i)})$ 在這裡是一個非線性函數 $g(\theta^Tx)$。
+</p><p>既然是不同的演算法，卻長得一模一樣，這是巧合呢，還是有更深的原因呢？？<br>
+當我們討論到 GLM models 就會解答這個問題了，敬請期待吧 ＾＾</p>
+<p></p>
+</font>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+ MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/12/lms/" data-toggle="tooltip" data-placement="top" title="Linear Regression(線性迴歸)">&larr; Previous Post</a>
-                        </li>
                     
+                        <li class="next">
+                            <a href="/techshare.github.io/2019/02/16/LWR/" data-toggle="tooltip" data-placement="top" title="Locally weighted linear regression(區域加權線性迴歸)">Next Post &rarr;</a>
+                        </li>
                     
                 </ul>
 
@@ -307,6 +378,17 @@
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">分類問題</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Logistic regression</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">logistic function</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">公式推導</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">結論</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -322,6 +404,10 @@
                     <div class="tags">
                        
                           <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
+                        
+                          <a class="tag" href="/techshare.github.io/tags/#logistic regression" title="logistic regression">logistic regression</a>
+                        
+                          <a class="tag" href="/techshare.github.io/tags/#classification problem" title="classification problem">classification problem</a>
                         
                     </div>
                 </section>
@@ -356,8 +442,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/11/supervised_learning/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/11/supervised_learning/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/18/logistic/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/18/logistic/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
