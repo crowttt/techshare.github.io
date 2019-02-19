@@ -148,6 +148,13 @@
 
                         
                         <li>
+                            <a href="/techshare.github.io/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
@@ -156,13 +163,6 @@
                         
                         <li>
                             <a href="/techshare.github.io/archive/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -224,9 +224,8 @@
 分類問題和之前提過的回歸問題差別在於目標值 y 是離散的。
 </p><p>這裡我們聚焦在 binary classification problem 上。</p>
 <p>例如要建立一個垃圾訊息篩選器，$x^{(i)}$ 可能是某種垃圾訊息的特徵，$y$ 的結果如果符合就為記為 1 ，不符合就記為 0。</p>
-<p>是 1 的話稱為 negative class，0 的話稱為 positive class，有時會用<br>
-“+” , “-” 標記。在給定 x(i) 的情況下，y 被稱為這個 training example<br>
-的標記。</p>
+<p>是 1 的話稱為 negative class，0 的話稱為 positive class，有時會用“+” , “-” 表示。<br>
+在給定 x(i) 的情況下，y 被稱為這個 training example 的標記。</p>
 <p></p>
 <h1><span id="logistic-regression">Logistic regression</span></h1>
 <h2><span id="logistic-function">logistic function</span></h2>
@@ -302,8 +301,8 @@ $$<br>
 \end{align}<br>
 $$</p>
 <p>第二個等號會成立是因為我們前面寫到的 $g’(z)=g(z)(1-g(z))$。</p>
-<p>第三個等號為什麼外面會掛著一個 $x_j$ 呢？ 因為 $\theta^Tx$ 是兩個向量的內積，內積的結果可以寫成$ \theta_0x_0 + \theta_1x_1 +\cdots + \theta_{n-1}x_{n-1} + \theta_nx_n $。對 $\theta_j$ 微分，除了$\theta_jx_j$ 其他項都是常數，所以微分完就剩下 $x_j$ 。</p>
-<p>最後，根據最後的結果，$\frac{\partial}{\partial\theta_j}l(\theta)=(y-h(x^{(i)}))x_j $。</p>
+<p>第三個等號為什麼外面會掛著一個 $x_j$ 呢？ 因為 $\theta^Tx$ 是兩個向量的內積，內積的結果可以寫成 $ \theta_0x_0 + \theta_1x_1 +\cdots + \theta_{n-1}x_{n-1} + \theta_nx_n $。對 $\theta_j$ 微分，除了$\theta_jx_j$ 其他項都是常數，所以微分完就剩下 $x_j$ 。</p>
+<p>根據最後的結果，$\frac{\partial}{\partial\theta_j}l(\theta)=(y-h(x^{(i)}))x_j $。</p>
 <p>帶入梯度上升算法的遞迴式中：<br>
 $$ \theta_j :=\theta_j + \alpha (y^{(i)}-h_\theta (x^{(i)}))x_j^{(i)} $$</p>
 <p>對多個 training example：<br>
@@ -334,6 +333,10 @@ $$ \theta_j :=\theta_j + (\alpha /m)\sum_{i=1}^{m}(y^{(i)}-h_\theta(x^{(i)}))x^{
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/techshare.github.io/2019/02/19/newton/" data-toggle="tooltip" data-placement="top" title="newton">&larr; Previous Post</a>
+                        </li>
                     
                     
                         <li class="next">

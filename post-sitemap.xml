@@ -7,8 +7,24 @@
     </url>
 
     <url>
+        <loc>https://crowttt.github.io/techshare.github.io/2019/02/11/supervised_learning/</loc>
+        <lastmod>2019-02-19T04:48:24.395Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://crowttt.github.io/techshare.github.io/2019/02/18/logistic/</loc>
-        <lastmod>2019-02-18T17:13:32.818Z</lastmod>
+        <lastmod>2019-02-19T04:43:21.479Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://crowttt.github.io/techshare.github.io/2019/02/19/newton/</loc>
+        <lastmod>2019-02-19T04:42:07.799Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -33,14 +49,6 @@
     <url>
         <loc>https://crowttt.github.io/techshare.github.io/2019/02/15/Prob/</loc>
         <lastmod>2019-02-16T13:51:52.757Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://crowttt.github.io/techshare.github.io/2019/02/11/supervised_learning/</loc>
-        <lastmod>2019-02-16T08:42:16.716Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
