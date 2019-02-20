@@ -2,13 +2,6 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://crowttt.github.io/techshare.github.io/tags/normal-equation/</loc>
-        <lastmod>2019-02-16T04:42:50.010Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://crowttt.github.io/techshare.github.io/tags/probability/</loc>
         <lastmod>2019-02-16T13:51:52.757Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -37,8 +30,15 @@
     </url>
 
     <url>
+        <loc>https://crowttt.github.io/techshare.github.io/tags/normal-equation/</loc>
+        <lastmod>2019-02-20T01:26:59.126Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://crowttt.github.io/techshare.github.io/tags/machine-learning/</loc>
-        <lastmod>2019-02-19T04:48:24.395Z</lastmod>
+        <lastmod>2019-02-20T01:30:41.096Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

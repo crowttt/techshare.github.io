@@ -14,7 +14,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          newton - Crowttt StudyNote
+          牛頓法(Newton’s method) - Crowttt StudyNote
         
     </title>
 
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('null')
+            background-image: url('bg.jpg')
             /*post*/
         
     }
@@ -90,8 +90,10 @@
                     <div class="post-heading">
                         <div class="tags">
                             
+                              <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
+                            
                         </div>
-                        <h1>newton</h1>
+                        <h1>牛頓法(Newton’s method)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
@@ -142,13 +144,6 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
@@ -157,6 +152,13 @@
                         
                         <li>
                             <a href="/techshare.github.io/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -212,7 +214,66 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <center>
+<div style="WIDTH: 100%; text-align: left">
+<h1><span id="什麼是牛頓法">什麼是牛頓法</span></h1>
+<font size="4"><p>
+在聽過牛頓法以前，應該不少人之前聽過牛頓勘根法，其實我們這裡要介紹的牛頓法也是一樣的東西，是用來求 $f(x)=0$ 的 $x$ 的一種迭代算法。
+</p><p>牛頓法的遞迴式有很有用的性質可以求最大 likelihood function $l(\theta)$ 的 $\theta$。<br>
+並且在大多數的場景下相比於批量梯度算法(batch) gradient descent 可以用較少次的遞迴來達到收斂。</p>
+<p></p></font>
+<h1><span id="原理與推導">原理與推導</span></h1>
+<font size="4"><p>
+先看看下面這張圖
+</p><p><img src="/techshare.github.io/2019/02/19/newton/newton.png" alt=""></p>
+<p>我們首先預設一個 $\theta_0$，然後在 $(\theta_0,f(\theta_0))$ 上以 $f’(\theta_o)$ 畫切線，計算切線與 $x$ 軸的相交的 $x$ 點，設為 $x_1$。</p>
+<p>⼀般來說， $x_1$ 會比 $x_0$ 更接近 $f(\theta)=0$ 的解。</p>
+<p>接著，以 $x_1$ 重新做相同的事便可以得到 $x_2$，然後依此類推，直到收斂。</p>
+<p>基於這樣的關係可以寫出以下遞迴式：<br>
+$$ x_0-x_1= \Delta x=\frac{f(x)}{f’(x)} $$</p>
+<p>這條公式應該很好懂就不多做說明了，而很明顯的這個遞迴式的終止條件就是 $\Delta x=0$ 也就是 $f(x)=0$</p>
+<p>為了配合我們要計算的然似函數，先將 $x$ 改成 $\theta$<br>
+$$ \theta_0-\theta_1= \Delta \theta=\frac{f(\theta)}{f’(\theta)} $$</p>
+<p>再來利用 $f(\theta)=0$ 時會收斂的性質，令 $f(\theta)=l’(\theta)$</p>
+<p>把式子改寫成：<br>
+$$ \theta :=\theta - \frac{l’(\theta)}{l&quot;(\theta)} $$</p>
+<p>可以看出來，$\theta$ 會在 $l’(\theta)=0$ 的時候收斂，而此時 $\theta$ 也就是使 likelihood 達到極值(最大值) 的 $\theta$。</p>
+<p>然而在一般狀況下會有多個特徵值，因此 $\theta$ 是一個向量，所以：<br>
+$$\theta := \theta -H^{-1}\nabla_\theta l(\theta) $$</p>
+<p>$\nabla_\theta l(\theta)$ 就是矩陣的微分，而 $H^{-1}$ 是 Hessian matrix ，一個 $n\times n$（如果算上干擾項的話是 $(n+1)\times (n+1)$) 的矩陣（n是特徵數量）</p>
+<p>$$H=\frac{\partial^2 l(\theta)}{\partial\theta_i \partial_j} $$</p>
+<p>寫成矩陣：</p>
+<p>$$ \nabla_A f(A)= \begin{bmatrix}<br>
+\frac{\partial^2 l(\theta)}{\partial \theta^2_1} &amp; \frac{\partial^2 l(\theta)}{\partial \theta_1\partial \theta_2} &amp; \cdots &amp; \frac{\partial^2 l(\theta)}{\partial \theta_1\partial \theta_n} \\ \frac{\partial^2 l(\theta)}{\partial \theta_2\partial \theta_1} &amp; \frac{\partial^2 l(\theta)}{\partial \theta_2^2} &amp; \cdots &amp; \frac{\partial^2 l(\theta)}{\partial \theta_2\partial \theta_n} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial^2 l(\theta)}{\partial \theta_n \partial \theta_1} &amp; \frac{\partial^2 l(\theta)}{\partial \theta_n\partial \theta_2} &amp; \cdots &amp; \frac{\partial^2 l(\theta)}{\partial \theta_n^2} \<br>
+\end{bmatrix} $$</p>
+<p>Hessian 可以看作是 $l(\theta)$ 的二次導數，所以 $H^{-1}\nabla_\theta l(\theta)$ 就是一階導數除以二階導數的解果。</p>
+<p></p></font>
+<h1><span id="總結">總結</span></h1>
+<font size="4"><p>
+如同一開始所說的，一般情況下，牛頓法⼀般來說會比 (batch) gradient descent 快很多，因為他可以花少得多的遞迴次數來達到收斂。
+</p><p>但是牛頓法每一次遞迴都要計算 $H^{-1}$ 一次，如果我們的特徵數量很多(例如數萬個參數)，計算 $H^{-1}$ 會變得十分昂貴。</p>
+<p>雖然是這麽說，只要不是在非常極端的例子，牛頓法一班還是會表現得比較好。</p>
+<p>這裡將⽜頓法⽤在求最大概似函數（maximum likelihood function）的極⼤值上，這個作法也稱為 Fisher’s scoring。</p>
+<p></p></font>
+<h1><span id="參考資料">參考資料</span></h1>
+<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf<a>
+</a></a></li>
+<li><a herf="https://zh.wikipedia.org/wiki/海森矩阵">https://zh.wikipedia.org/wiki/海森矩阵<a>
+</a></a></li>
+</div>
+</center>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+ MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
                 
 
                 <hr>
@@ -267,7 +328,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">什麼是牛頓法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">原理與推導</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
         
         </div>
       </aside>
@@ -287,6 +348,8 @@
                     <h5><a href="/techshare.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
+                        
                     </div>
                 </section>
                 
