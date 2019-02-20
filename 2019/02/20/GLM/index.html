@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Locally weighted linear regression(區域加權線性迴歸) - Crowttt StudyNote
+          Generalized Linear Models(生成線性模型) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/16/LWR/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/20/GLM/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -90,16 +90,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-                            
-                              <a class="tag" href="/techshare.github.io/tags/#linear regression" title="linear regression">linear regression</a>
+                              <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                             
                         </div>
-                        <h1>Locally weighted linear regression(區域加權線性迴歸)</h1>
+                        <h1>Generalized Linear Models(生成線性模型)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-16
+                            2019-02-20
                         </span>
                     </div>
                 
@@ -216,63 +214,85 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <font size="4">
-<h1><span id="underfitting-overfitting-欠擬合與過擬合">underfitting ＆ overfitting (欠擬合與過擬合)</span></h1>
-先看以下這幾張圖：
-<p><img src="/techshare.github.io/2019/02/16/LWR/fitting.png" alt=""></p>
-<p>
-對這組數據，分佈型態有拋物線的趨勢，向最左邊的圖，用 $y = \theta_0 + \theta_1x $的 hypothesis 無法很好的估計這組數據。
-</p><p>相反的，如最右邊的圖，針對這組數據我們可以擬合出⼀個五次方的多項式$y = \theta_0 + \theta_1x + \theta_2x^2+ \theta_3x^3 + \theta_4x^4 + \theta_5x^5$去精準的吻合 training set。</p>
-<p>不過這⼜有另外⼀個問題，這樣的估計結果不具有普遍性，只是充分符合 training set 的情況。</p>
-<p>最左邊的情況稱為欠擬合（underfitting），而最右邊的稱為過擬合（overfitting）<br>
-要解決特徵選擇問題，有許多方法可以用，接下來要講的非參數學習算法就是其中之一。</p>
-<p></p>
-<h1><span id="non-parametric-learning-algorithm非參數學習算法">non-parametric learning algorithm（非參數學習算法）</span></h1>
-<h2><span id="參數學習-非參數學習">參數學習 ＆ 非參數學習</span></h2>
-<p>
-先定義這個概念：
-<li>parametric learning algorithm ：⼀類有固定數⽬的參數⽤以數據擬合的算法，例如線性迴歸，有⼀組固定的參數集合 $\theta$</li>
-<li>non-parametric learning algorithm ：一類參數量會隨訓練集合大小成線性成長的算法。</li>
-</p><p>這裡我們要討論的便是一種非參數學習算法：<br>
-Locally weighted linear regression（區域加權線性迴歸）</p>
-<p></p>
-<p></p><h2><span id="區域加權線性迴歸">區域加權線性迴歸</span></h2><p></p>
-<p>
-假設有⾜夠的 training data，使得整個模型比較不受特徵選擇影響。
-</p><p>⼀般的線性迴歸步驟：</p>
+                <center>
+<div style="WIDTH: 100%; text-align: left">
+<h1><span id="前言">前言</span></h1>
+<p><font size="4"><p><br>
+這是一篇滿大的題目，所以先大概說說這篇要介紹什麼</p>
+<p>在前⾯的內容中，我們討論過 regression 和 classification 兩種模型</p>
+<li>回歸模型中: $y|x;\theta \sim \mathcal{N}(\mu, \sigma^2)$ </li>
+<li>分類模型中: $y|x;\theta \sim Bernoulli(\phi)$ </li>
+<p>在這篇中，我們將證明這兩種模型都是廣義線性模型 Generalized<br>
+Linear Models (GLMs) 的特例。並且證明廣義線性模型還可以推導<br>
+出其他不同的模型，適用於其他類型的分類或迴歸問題。</p>
+</font></p>
+<h1><span id="the-exponential-family指數族">The exponential family(指數族)</span></h1>
+<font size="4"><p>
+⾸先我們要先說明什麼是指數分佈。
+</p><p>我們若說一類分佈屬於指數分佈，那他可以寫成以下形式：<br>
+$$ p(y;\eta)=b(y)exp(\eta^TT(y)-a(\eta)) $$</p>
+<p>首先說明各個參數：</p>
+<li>$\eta$ 稱為 natural parameter</li>
+<li>$T(y)$ 是充分統計量(sufficient statistic)，在多數情況下，$T(y) = y$</li>
+<li>$a(\eta)$ 稱為 log partition function，$e^{-a(\eta)}$ 是⽤來讓函數正規化的常數，也就是讓機率密度函數 $p(y; \eta)$ 的積分範圍從 $y$ 到 $1$</li>
+<p>$\divideontimes$充分統計量：樣本的分佈參數可以用充分統計量求出來，也就是說，充分統計量中包含全部樣本信息。</p>
+<p>固定一組 T,a,b 可以定義⼀個以 $\eta$ 為參數的分佈族，如果改變 $\eta$，就可以得到分佈族中不同的分佈函數。</p>
+<p>接下來我們證明 Bernoulli 和 Gaussian 分佈是指數分佈族。</p>
+<p></p></font>
+<h1><span id="bernoulli">Bernoulli</span></h1>
+<font size="4"><p>
+一個 Bernoulli 分佈寫作 $Bernoulli(\phi)$，期望值為 $\phi$ ，則我們知道他的 $y\in (0,1)$因此，$p(y=1;\phi)=\phi $ ; $p(y=0;\phi )=1-\phi$。
+</p><p>隨著 $\phi$ 的改變，我們可以得到不同的 Bernoulli 分佈函數，我們試著改寫 分佈函數為：</p>
+<p>$$ \begin{align}<br>
+p(y;\phi) &amp;=\phi^y(1-\phi)^{(1-y)} \\<br>
+&amp; =exp(yln(\phi)+(1-y)ln(1-\phi)) \\<br>
+&amp; =exp(yln(\frac{\phi}{1-\phi})+ln(1-\phi))<br>
+\end{align} $$</p>
+<p>整理成這樣後，對應整數族分布的參數：</p>
 <ol>
-<li>找到使 $\sum_{i=1}^{m}(y^{(i)}-\theta^Tx^{(i)})^2$ 最小的 $\theta$</li>
-<li>回傳 $\theta^Tx$</li>
+<li>$\eta=ln(\frac{\phi}{1-\phi})$</li>
+<li>$T(y)=y$</li>
+<li>$a(\eta)=-ln(1-\phi)=ln(1+e^\eta)$</li>
+<li>$b(y)=1$</li>
 </ol>
-<p>區域加權線性迴歸步驟：</p>
+<p>有意思的是，將第一條式子整理一下會發現 $\phi =\frac{1}{1+e^{-\eta}}$<br>
+搞半天 $\phi$ 是 sigmoid function 啊！！！</p>
+<p>想想也很合理，Bernoulli 的期望值 $\phi$ 本來就會在 (0,1) 之間。</p>
+<p>眼尖的朋友們可能還發現了一點，$\eta=\theta^T x$。<br>
+在這先埋個伏筆，應該下一篇就會詳細介紹 ＾＾</p>
+<p></p></font>
+<h1><span id="gaussian">Gaussian</span></h1>
+<font size="4"><p>
+Gaussian 的機率密度函數：
+$$ p(y;\mu)=\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y-\mu)^2}{2\sigma^2}) $$
+</p><p>如果大家還記得 “機率上的解釋” 那篇最後提到的內容，變異數的值與 $\theta$ 和 $h(x)$ 無關。</p>
+<p>因此，我們可以選擇任意值帶入變異數，我們令 $\sigma =1$ 以簡化方程式：</p>
+<p>$$ \begin{align}<br>
+p(y;\mu) &amp;=\frac{1}{\sqrt{2\pi}}exp(-\frac{(y-\mu)^2}{2}) \\<br>
+&amp; =\frac{1}{\sqrt{2\pi}}exp(-\frac{y^2}{2})exp(y\mu-\frac{\mu^2}{2})<br>
+\end{align} $$</p>
+<p>整理成這樣後，對應整數族分布的參數：</p>
 <ol>
-<li>找到使 $\sum_{i=1}^{m}\omega^{(i)}(y^{(i)}-\theta^Tx^{(i)})^2$ 最小的 $\theta$</li>
-<li>回傳 $\theta^Tx$</li>
+<li>$\eta = \mu$</li>
+<li>$T(y)=y$</li>
+<li>$a(\eta)=\frac{1}{2}\mu^2=\frac{1}{2}\eta^2 $</li>
+<li>$b(y)=\frac{1}{\sqrt{2\pi}}exp(-\frac{y^2}{2}) $</li>
 </ol>
-<p>$\omega^{(i)}$ 是一個非負的權重值，對⼀個特定的 i ，當權重大時，這筆資料會比較重要，我們要選更加符合這筆資料的 $\theta$ 讓 $(y^{(i)}-\theta^Tx^{(i)})^2$ 變小。</p>
-<p>相反的，當權重很小時，不論 $\theta$ 帶多少，對整體影響都不大。</p>
-<p>這裡我們介紹一種常用的權重公式：<br>
-$$ \omega^{(i)}=exp(-\frac{(x^{(i)}-x)^2}{2\tau^2}) $$</p>
-<p>（這看起來有點像高斯分佈，但其實沒什麼關係）</p>
-<p>我第一次看的時候搞不太懂 $x^{(i)}$ 和 $x$ 之間的關係。<br>
-$x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的點(query point)。</p>
-<p>舉個例子比較好懂，假設我有一組訓練組合，(x:1,y:2),(x:2,y:4),(x:3,y:6) 然後我想知道 (7,y) 的 y 是多少，這裡帶入的 7 (query point)。</p>
-<p>所以這兩者分屬不同的集合，而 x 帶不同值會產生不同的 hypothesis function。</p>
-<p>從 $\omega^{(i)}$ 的公式中可以看出來，如果 $x^{(i)}$ 和 $x$ 非常接近直至重疊，$|x^{(i)}-x|$ 極小，$\omega^{(i)}$ 趨近最大值 1。</p>
-<p>如果 $x^{(i)}$ 和 $x$ 差很遠，$|x^{(i)}-x|$ 很大，$\omega^{(i)}$ 會變很小。</p>
-<p>最後，$\tau$ 叫做 bandwidth，控制權重遞減的速度，$\tau$ 越大，權重遞減速度越慢，高斯分佈的線寬也越大，反之則相反。</p>
-<p></p>
+<p>高斯分布也是指數族到此證明完畢。</p>
+<p></p></font>
 <h1><span id="總結">總結</span></h1>
-<p>
-區域加權線性回歸是我們第一個介紹的非參數算法(non-parametric)，而前幾篇講到的線性迴歸屬於參數算法(parametric)。
-</p><p>這兩者最大的不同點在於線性迴歸有一組固定且有限的數字作為參數，所以一旦擬合出一組 $\theta$'s 後，訓練集就不再需要。</p>
-<p>加權線性回歸就不一樣了，我們需要保留整組訓練集，這個 “non-parametric” 的意義大致上就是指<br>
-每次預測的時候 hypothesis 的擬合都要考慮整個訓練集，所以我們用來表示 hypothesis 的東西 “隨訓練集的大小增加而增加，呈線性成長”，呼應了非參數學習的定義。</p>
-<p></p>
+<font><p>
+除了這篇提到的 Bernoulli 和 Gaussian，還有很多種分佈也是指數族的一份子。
+例如：多項分佈(multinomial), 泊頌分佈(Poisson), gamma, exponential, bata .....
+</p><p>沒有意外的話，下一篇會接續本篇介紹利用以上這些指數族的機率分佈建構 GLM 模型的 “套路” 。</p>
+<p></p></font>
 <h1><span id="參考資料">參考資料</span></h1>
 <li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf<a>
 </a></a></li>
-</font>
+<li> 參考書籍：Fundamentals of Probability with Stochastic Processes Saeed Ghahramani Thrid Edition (ISBN: 978-1-29203-912-1)
+</li>
+</div>
+</center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
@@ -285,19 +305,16 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
     "HTML-CSS": { availableFonts: ["TeX"] }
   });
 </script>
+
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/18/logistic/" data-toggle="tooltip" data-placement="top" title="Classification and logistic regression(分類問題與邏輯回歸)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/15/Prob/" data-toggle="tooltip" data-placement="top" title="Probabilistic interpretation(機率上的解釋)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/19/newton/" data-toggle="tooltip" data-placement="top" title="Newton’s method(牛頓法)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -338,6 +355,17 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">The exponential family(指數族)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Bernoulli</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Gaussian</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -352,9 +380,7 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
                     <h5><a href="/techshare.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-                        
-                          <a class="tag" href="/techshare.github.io/tags/#linear regression" title="linear regression">linear regression</a>
+                          <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                         
                     </div>
                 </section>
@@ -374,8 +400,8 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/16/LWR/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/16/LWR/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/20/GLM/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/20/GLM/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
