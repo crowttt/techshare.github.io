@@ -7,6 +7,13 @@
     </url>
     
     <url>
+        <loc>https://crowttt.github.io/techshare.github.io/about/</loc>
+        <lastmod>2019-02-20T03:59:01.335Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
         <loc>https://crowttt.github.io/techshare.github.io/archive/</loc>
         <lastmod>2019-02-14T13:43:19.126Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -16,13 +23,6 @@
     <url>
         <loc>https://crowttt.github.io/techshare.github.io/tags/</loc>
         <lastmod>2019-02-14T13:43:14.097Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://crowttt.github.io/techshare.github.io/about/</loc>
-        <lastmod>2019-02-14T13:31:13.454Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
