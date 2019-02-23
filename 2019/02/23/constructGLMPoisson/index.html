@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Newton’s method(牛頓法) - Crowttt StudyNote
+          Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/19/newton/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -90,14 +90,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
+                              <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                             
                         </div>
-                        <h1>Newton’s method(牛頓法)</h1>
+                        <h1>Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-19
+                            2019-02-23
                         </span>
                     </div>
                 
@@ -216,50 +216,65 @@
 
                 <center>
 <div style="WIDTH: 100%; text-align: left">
-<h1><span id="什麼是牛頓法">什麼是牛頓法</span></h1>
+<h1><span id="前言">前言</span></h1>
 <font size="4"><p>
-在聽過牛頓法以前，應該不少人之前聽過牛頓勘根法，其實我們這裡要介紹的牛頓法也是一樣的東西，是用來求 $f(x)=0$ 的 $x$ 的一種迭代算法。
-</p><p>牛頓法的遞迴式有很有用的性質可以求最大 likelihood function $l(\theta)$ 的 $\theta$。<br>
-並且在大多數的場景下相比於批量梯度算法(batch) gradient descent 可以用較少次的遞迴來達到收斂。</p>
+這篇算是上一篇 "建構 GLM 模型" 的番外篇。
+</p><p>如果各位有興趣去看參考資料的話是沒有這部分的，不過因爲上一篇的前言中用 poisson 的例子開場，所以基於有始有終的精神我還是把過程補上。</p>
+<p>另一方面我覺得 poisson 在實務上應用滿多的，像是單位時間內網站的造訪次數啊，一個小時內一個路口的車流量啊什麼的…</p>
+<p>跟 poisson 相似的還有例如 beta distribution , gama distribution，各位也可以自己實際推導一次。</p>
 <p></p></font>
-<h1><span id="原理與推導">原理與推導</span></h1>
+<h1><span id="poisson-regression">poisson regression</span></h1>
+<h2><span id="指數族分佈">指數族分佈</span></h2>
 <font size="4"><p>
-先看看下面這張圖
-</p><p><img src="/techshare.github.io/2019/02/19/newton/newton.png" alt=""></p>
-<p>我們首先預設一個 $\theta_0$，然後在 $(\theta_0,f(\theta_0))$ 上以 $f’(\theta_o)$ 畫切線，計算切線與 $x$ 軸的相交的 $x$ 點，設為 $x_1$。</p>
-<p>⼀般來說， $x_1$ 會比 $x_0$ 更接近 $f(\theta)=0$ 的解。</p>
-<p>接著，以 $x_1$ 重新做相同的事便可以得到 $x_2$，然後依此類推，直到收斂。</p>
-<p>基於這樣的關係可以寫出以下遞迴式：<br>
-$$ x_0-x_1= \Delta x=\frac{f(x)}{f’(x)} $$</p>
-<p>這條公式應該很好懂就不多做說明了，而很明顯的這個遞迴式的終止條件就是 $\Delta x=0$ 也就是 $f(x)=0$</p>
-<p>為了配合我們要計算的然似函數，先將 $x$ 改成 $\theta$<br>
-$$ \theta_0-\theta_1= \Delta \theta=\frac{f(\theta)}{f’(\theta)} $$</p>
-<p>再來利用 $f(\theta)=0$ 時會收斂的性質，令 $f(\theta)=l’(\theta)$</p>
-<p>把式子改寫成：<br>
-$$ \theta :=\theta - \frac{l’(\theta)}{l&quot;(\theta)} $$</p>
-<p>可以看出來，$\theta$ 會在 $l’(\theta)=0$ 的時候收斂，而此時 $\theta$ 也就是使 likelihood 達到極值(最大值) 的 $\theta$。</p>
-<p>然而在一般狀況下會有多個特徵值，因此 $\theta$ 是一個向量，所以：<br>
-$$\theta := \theta -H^{-1}\nabla_\theta l(\theta) $$</p>
-<p>$\nabla_\theta l(\theta)$ 就是矩陣的微分，而 $H^{-1}$ 是 Hessian matrix ，一個 $n\times n$（如果算上干擾項的話是 $(n+1)\times (n+1)$) 的矩陣（n是特徵數量）</p>
-<p>$$H=\frac{\partial^2 l(\theta)}{\partial\theta_i \partial_j} $$</p>
-<p>寫成矩陣：</p>
-<p>$$ \nabla_A f(A)= \begin{bmatrix}<br>
-\frac{\partial^2 l(\theta)}{\partial \theta^2_1} &amp; \frac{\partial^2 l(\theta)}{\partial \theta_1\partial \theta_2} &amp; \cdots &amp; \frac{\partial^2 l(\theta)}{\partial \theta_1\partial \theta_n} \\ \frac{\partial^2 l(\theta)}{\partial \theta_2\partial \theta_1} &amp; \frac{\partial^2 l(\theta)}{\partial \theta_2^2} &amp; \cdots &amp; \frac{\partial^2 l(\theta)}{\partial \theta_2\partial \theta_n} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ \frac{\partial^2 l(\theta)}{\partial \theta_n \partial \theta_1} &amp; \frac{\partial^2 l(\theta)}{\partial \theta_n\partial \theta_2} &amp; \cdots &amp; \frac{\partial^2 l(\theta)}{\partial \theta_n^2} \<br>
-\end{bmatrix} $$</p>
-<p>Hessian 可以看作是 $l(\theta)$ 的二次導數，所以 $H^{-1}\nabla_\theta l(\theta)$ 就是一階導數除以二階導數的解果。</p>
+就以一間店單位時間的來客數為例，令 y 為單位時間的來客量，$\lambda$ 為單位時間來客量的期望值
+</p><p>$$\begin{align} p(y) &amp;=\frac{e^{-\lambda}\lambda^y}{y!} \\<br>
+&amp; =exp(ln\frac{e^{-\lambda}\lambda^y}{y!}) \\<br>
+&amp; =exp(ln(e^{-\lambda})+ln(\lambda^y)-ln(y!)) \\<br>
+&amp; =exp(y(ln\lambda)+ln\frac{e^{-\lambda}}{y!})<br>
+\end{align} $$</p>
+<p>對照指數族分佈：<br>
+$$ p(y;\eta)=b(y)exp(\eta^TT(y)-a(\eta)) $$</p>
+<p>$$ b(y)=1 $$<br>
+$$ \eta=ln(\lambda) $$<br>
+$$ a(\eta)=-ln\frac{e^{-\lambda}}{y!} $$</p>
+<p>到此得證 Poisson 屬於指數族。</p>
 <p></p></font>
-<h1><span id="總結">總結</span></h1>
+<h2><span id="regression-models">Regression models</span></h2>
 <font size="4"><p>
-如同一開始所說的，一般情況下，牛頓法⼀般來說會比 (batch) gradient descent 快很多，因為他可以花少得多的遞迴次數來達到收斂。
-</p><p>但是牛頓法每一次遞迴都要計算 $H^{-1}$ 一次，如果我們的特徵數量很多(例如數萬個特徵)，計算 $H^{-1}$ 會變得十分昂貴。</p>
-<p>雖然是這麽說，只要不是在非常極端的例子，牛頓法一般還是會表現得比較好。</p>
-<p>這裡將⽜頓法⽤在求最大概似函數（maximum likelihood function）的極⼤值上，這個作法也稱為 Fisher’s scoring。</p>
+</p><p>已知<br>
+$$ \eta=ln\lambda $$<br>
+所以<br>
+$$ \lambda = e^{\eta} $$</p>
+<p>利用假設二<br>
+$$ \begin{align}<br>
+h_\theta(x) &amp;=E[y|x;\theta] \\<br>
+&amp; =\lambda \\<br>
+&amp; =e^{\eta} \\<br>
+&amp; =e^{\theta^Tx}<br>
+\end{align} $$</p>
+<p>到此為止得到 hypothesis</p>
+<p></p></font>
+<h2><span id="最大然似估計">最大然似估計</span></h2>
+<font size="4"><p>
+$$ \lambda=E[y|x;\theta]=e^{\theta^Tx} $$
+$$ \begin{align} 
+p(y) &=\frac{e^{-\lambda}\lambda^y}{y!} \\\ 
+& =\frac{e^{y\theta^Tx}e^{-e^{\theta^Tx}}}{y!} 
+\end{align}$$
+</p><p>假設對有 m 個樣本的訓練集：<br>
+$$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_i}}}{y_i!} $$</p>
+<p>$$ l(\theta;x,y)=ln(L(\theta;x,y))=\sum_{i=1}^{m}(y_i\theta^Tx_i-e^{\theta^Tx_i}-ln(y_i!)) $$</p>
+<p>有些小夥伴可能跟我一樣覺得最後那個階乘很礙眼，不過沒關係，那只是常數，對 $\theta$ 微分後就會消失了。</p>
+<p>總而言之倒這裡應該沒什麼問題了，再來就用 gradient ascent 或 Newton’s method 就可以得到 $\theta_i$ 了＾＾</p>
 <p></p></font>
 <h1><span id="參考資料">參考資料</span></h1>
-<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf<a>
-</a></a></li>
-<li><a herf="https://zh.wikipedia.org/wiki/海森矩阵">https://zh.wikipedia.org/wiki/海森矩阵<a>
-</a></a></li>
+<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf</a>
+</li>
+<li>
+<a herf="https://en.wikipedia.org/wiki/Poisson_regression">https://en.wikipedia.org/wiki/Poisson_regression</a>
+</li>
+<li> 參考書籍：Fundamentals of Probability with Stochastic Processes Saeed Ghahramani Thrid Edition (ISBN: 978-1-29203-912-1)
+</li>
 </div>
 </center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -280,13 +295,9 @@ $$\theta := \theta -H^{-1}\nabla_\theta l(\theta) $$</p>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/20/GLM/" data-toggle="tooltip" data-placement="top" title="Generalized Linear Models(廣義線性模型)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/18/logistic/" data-toggle="tooltip" data-placement="top" title="Classification and logistic regression(分類問題與邏輯回歸)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/22/constructGLM/" data-toggle="tooltip" data-placement="top" title="Constructing GLMs(建構 GML 模型)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -332,7 +343,7 @@ $$\theta := \theta -H^{-1}\nabla_\theta l(\theta) $$</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">什麼是牛頓法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">原理與推導</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">poisson regression</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">指數族分佈</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">Regression models</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">最大然似估計</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
         
         </div>
       </aside>
@@ -352,7 +363,7 @@ $$\theta := \theta -H^{-1}\nabla_\theta l(\theta) $$</p>
                     <h5><a href="/techshare.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
+                          <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                         
                     </div>
                 </section>
@@ -372,8 +383,8 @@ $$\theta := \theta -H^{-1}\nabla_\theta l(\theta) $$</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/19/newton/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/19/newton/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
