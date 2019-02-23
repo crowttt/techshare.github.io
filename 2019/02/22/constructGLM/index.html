@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Locally weighted linear regression(區域加權線性迴歸) - Crowttt StudyNote
+          Constructing GLMs(建構 GML 模型) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/16/LWR/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/22/constructGLM/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -90,16 +90,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/techshare.github.io/tags/#linear regression" title="linear regression">linear regression</a>
-                            
                               <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
                             
                         </div>
-                        <h1>Locally weighted linear regression(區域加權線性迴歸)</h1>
+                        <h1>Constructing GLMs(建構 GML 模型)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-16
+                            2019-02-22
                         </span>
                     </div>
                 
@@ -216,63 +214,134 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <font size="4">
-<h1><span id="underfitting-overfitting-欠擬合與過擬合">underfitting ＆ overfitting (欠擬合與過擬合)</span></h1>
-先看以下這幾張圖：
-<p><img src="/techshare.github.io/2019/02/16/LWR/fitting.png" alt=""></p>
-<p>
-對這組數據，分佈型態有拋物線的趨勢，向最左邊的圖，用 $y = \theta_0 + \theta_1x $的 hypothesis 無法很好的估計這組數據。
-</p><p>相反的，如最右邊的圖，針對這組數據我們可以擬合出⼀個五次方的多項式$y = \theta_0 + \theta_1x + \theta_2x^2+ \theta_3x^3 + \theta_4x^4 + \theta_5x^5$去精準的吻合 training set。</p>
-<p>不過這⼜有另外⼀個問題，這樣的估計結果不具有普遍性，只是充分符合 training set 的情況。</p>
-<p>最左邊的情況稱為欠擬合（underfitting），而最右邊的稱為過擬合（overfitting）<br>
-要解決特徵選擇問題，有許多方法可以用，接下來要講的非參數學習算法就是其中之一。</p>
-<p></p>
-<h1><span id="non-parametric-learning-algorithm非參數學習算法">non-parametric learning algorithm（非參數學習算法）</span></h1>
-<h2><span id="參數學習-非參數學習">參數學習 ＆ 非參數學習</span></h2>
-<p>
-先定義這個概念：
-<li>parametric learning algorithm ：⼀類有固定數⽬的參數⽤以數據擬合的算法，例如線性迴歸，有⼀組固定的參數集合 $\theta$</li>
-<li>non-parametric learning algorithm ：一類參數量會隨訓練集合大小成線性成長的算法。</li>
-</p><p>這裡我們要討論的便是一種非參數學習算法：<br>
-Locally weighted linear regression（區域加權線性迴歸）</p>
-<p></p>
-<p></p><h2><span id="區域加權線性迴歸">區域加權線性迴歸</span></h2><p></p>
-<p>
-假設有⾜夠的 training data，使得整個模型比較不受特徵選擇影響。
-</p><p>⼀般的線性迴歸步驟：</p>
+                <center>
+<div style="WIDTH: 100%; text-align: left">
+<h1><span id="前言">前言</span></h1>
+<font size="4"><p>
+舉個例子，要預測一家店每⼩時的來客量，該怎麼建立模型？
+</p><p>我們知道一家店每小時的來客量符合 possion distribution。</p>
+<p>幸運的是，Poisson 屬於 exponential family distribution，所以我們可以利用 Generalized Linear Model (GLM) 建立模型。</p>
+<p>在這篇我們會主要探討在面對這類問題時，建構 GLM 模型的方法。</p>
+<p></p></font>
+<h1><span id="建立假設">建立假設</span></h1>
+<font size="4"><p>
+考慮一個給定 x 可以得到一個隨機變數 y 的回歸或分類問題，為了利用 GLM 解決，我們要滿⾜以下三個假設：
 <ol>
-<li>找到使 $\sum_{i=1}^{m}(y^{(i)}-\theta^Tx^{(i)})^2$ 最小的 $\theta$</li>
-<li>回傳 $\theta^Tx$</li>
+<li>$y | x; \theta$ ∼ ExponentialFamily($\eta$)，這個意思是說，在給定⼀個變數 $x$ 和一個參數 $\theta$ 所得到的 $y$ 是 ExponentialFamily distribution，也就是說，給定適當的 $a,b,T$函數，可以將 $y$ 表達成以 $\eta$ 為參數的函數。</li><br>
+<li>給定 $x$，我們的目標是為了得到 $E[T(y)|x ]$，在多數情況下，$T(y)＝y$。所以我們的 hypothesis $h(x) = E[y|x ]$。<br>
+這個假設，對 logistic regression 和 linear regression 都有效。<br>
+舉個例子:
+對 logistic regression: $h(x)=p(y=1|x; \theta)= 0\times p(y=0|x;\theta)+1\times p(y=1|x; \theta)=E[y|x;\theta]$</li><br>
+<li>natural parameter $\eta=\theta^Tx$<br>
+如果 $\eta$ 是向量 $\eta_i=\theta^T_ix$</li><br>
 </ol>
-<p>區域加權線性迴歸步驟：</p>
-<ol>
-<li>找到使 $\sum_{i=1}^{m}\omega^{(i)}(y^{(i)}-\theta^Tx^{(i)})^2$ 最小的 $\theta$</li>
-<li>回傳 $\theta^Tx$</li>
-</ol>
-<p>$\omega^{(i)}$ 是一個非負的權重值，對⼀個特定的 i ，當權重大時，這筆資料會比較重要，我們要選更加符合這筆資料的 $\theta$ 讓 $(y^{(i)}-\theta^Tx^{(i)})^2$ 變小。</p>
-<p>相反的，當權重很小時，不論 $\theta$ 帶多少，對整體影響都不大。</p>
-<p>這裡我們介紹一種常用的權重公式：<br>
-$$ \omega^{(i)}=exp(-\frac{(x^{(i)}-x)^2}{2\tau^2}) $$</p>
-<p>（這看起來有點像高斯分佈，但其實沒什麼關係）</p>
-<p>我第一次看的時候搞不太懂 $x^{(i)}$ 和 $x$ 之間的關係。<br>
-$x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的點(query point)。</p>
-<p>舉個例子比較好懂，假設我有一組訓練組合，(x:1,y:2),(x:2,y:4),(x:3,y:6) 然後我想知道 (7,y) 的 y 是多少，這裡帶入的 7 (query point)。</p>
-<p>所以這兩者分屬不同的集合，而 x 帶不同值會產生不同的 hypothesis function。</p>
-<p>從 $\omega^{(i)}$ 的公式中可以看出來，如果 $x^{(i)}$ 和 $x$ 非常接近直至重疊，$|x^{(i)}-x|$ 極小，$\omega^{(i)}$ 趨近最大值 1。</p>
-<p>如果 $x^{(i)}$ 和 $x$ 差很遠，$|x^{(i)}-x|$ 很大，$\omega^{(i)}$ 會變很小。</p>
-<p>最後，$\tau$ 叫做 bandwidth，控制權重遞減的速度，$\tau$ 越大，權重遞減速度越慢，高斯分佈的線寬也越大，反之則相反。</p>
-<p></p>
-<h1><span id="總結">總結</span></h1>
-<p>
-區域加權線性回歸是我們第一個介紹的非參數算法(non-parametric)，而前幾篇講到的線性迴歸屬於參數算法(parametric)。
-</p><p>這兩者最大的不同點在於線性迴歸有一組固定且有限的數字作為參數，所以一旦擬合出一組 $\theta$'s 後，訓練集就不再需要。</p>
-<p>加權線性回歸就不一樣了，我們需要保留整組訓練集，這個 “non-parametric” 的意義大致上就是指<br>
-每次預測的時候 hypothesis 的擬合都要考慮整個訓練集，所以我們用來表示 hypothesis 的東西 “隨訓練集的大小增加而增加，呈線性成長”，呼應了非參數學習的定義。</p>
-<p></p>
-<h1><span id="參考資料">參考資料</span></h1>
-<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf<a>
-</a></a></li>
+</p></font>
+<h1><span id="logistic-regression">Logistic Regression</span></h1>
+<font size="4"><p>
+要建構回歸模型，面對一個問題，我們的目標值 y 是一個二元值，那麼很自然的我們會用 Bernoulli  distribution 表達 $f(y|x)$。
+</p><p>在 Bernoulli 的指數族形式中我們知道 $\phi=1/(1+e^{-\eta})$。</p>
+<p>更進一步，如果 $y|x;\theta$ ~ Bernoulli($\phi$) 那麼期望值 $E[y|x;\theta]=\phi$。</p>
+<p>因此我們可以得到：</p>
+<p>$$\begin{align}<br>
+h_\theta(x) &amp;=E[y|x;\theta] \\<br>
+&amp; =\phi \\<br>
+&amp; =1/(1+e^{-\eta}) \\<br>
+&amp; =1/(1+e^{-\theta^Tx})<br>
+\end{align} $$</p>
+<p>第一個等號會成立是用到 GLM 第二個假設，給定 $x$，我們要求的 $h(\theta)=E[T(y)|x]$ 。<br>
+第二和三個等號上面剛提過就不贅述了。<br>
+最後一個等號則是根據第三個假設，$\eta$ 和特徵項量 $x$ 的關係是線性的，並且他們的關係由 $\theta$ 決定。</p>
+<p>如果有朋友們在之前講 logistic function 的時候疑惑 $1/(1+e^{-z})$ 是怎麼來的，以上便是一種解法。</p>
+<p>在整個推導過程中我們唯一要做的決策只是假設 給定 $x$，$y$ 會成 Bernoulli distribution，剩下的全靠 GML 和 exponential family 的假設就可以產生一系列定義。</p>
+<p>最後提一下一個比較學術的概念，$g(\eta)=E[y;\eta]=\frac{1}{1+e^{-\eta}}$<br>
+$g(\eta)$ 叫作 canonical response function，可以使自然參數 $\eta$ 和 $y$ 的期望值聯繫起來。<br>
+而 $g(\eta)^{-1}$ 叫做 canonical link function。</p>
+<p>這個知識點在這不是特別重要，所以就不深究了。</p>
+<p></p></font>
+<h1><span id="ordinary-least-squares">Ordinary Least Squares</span></h1>
+<font size="4"><p>
+要建構 Ordinary Least Squares 的模型就更簡單了。
+</p><p>假設 $y|x$ 成高斯分佈 $\mathcal{N}(\mu,\sigma^2)$</p>
+<p>根據 GML 和 exponential family 的假設：<br>
+$$\begin{align}<br>
+h_\theta(x) &amp;=E[y|x;\theta] \\<br>
+&amp; =\mu \\<br>
+&amp; =\eta \\<br>
+&amp; =\theta^Tx<br>
+\end{align}$$</p>
+<p>第一個等號成立是因為第二個假設。<br>
+第二個等號成立是因為 $y|x;\theta$ ~ Bernoulli($\phi$)，所以我們知道期望值是 $\mu$。<br>
+第三個等號成立的原因可以去看上一篇高斯分佈寫成指數族分佈的形式。<br>
+最後一個等號則是根據第三個假設。</p>
+<p></p></font>
+<h1><span id="softmax-regression">Softmax Regression</span></h1>
+<font size="4"><p>
+最後要介紹的 Softmax Regression 可能是 GLM 裡最複雜的例子
+</p><p>考慮一個分類問題的目標值 $y$ 不是 Bernoulli distribution，而是 multinomial distribution(多項式分佈)。</p>
+<p>也就是說，$y \in \{1,2,…,k\}$，而不是只有 0,1 兩種。</p>
+<p>舉例來說，要把郵件分類成 垃圾郵件,工作郵件,私人郵件 三類，或是判斷病人是感冒,腸胃炎,還是過敏。</p>
+<p></p></font>
+<p></p><h2><span id="指數族分佈">指數族分佈</span></h2><p></p>
+<p><font size="4"><p><br>
+為了用 GLM 為多項式分佈的資料建立模型，我們先將它寫成指數族的形式。</p>
+<p>為了參數化 $k$ 個可能的結果，我們使⽤ $\phi_1, . . . , \phi_k$ 代表 $k$ 個結果的機率，$\phi_i = p(y = i; \phi)$。</p>
+<p>的可以注意到的是，這 k 個參數並不是獨立的，因為根據基本的機率知識 $\sum_{i=1}^{k}\phi_i=1 $ ，所以 $\phi_k=1-\sum_{i=1}^{k-1}\phi_i $。</p>
+<p>這件事要知道，因為之後都會用這個形式表達 $\phi_k$，之後進行參數化的時後都只討論 $1$~$k-1$。</p>
+<p>我們定義 $T(y) \in R^{k−1}$ ，像以下這樣：<br>
+$$T(1)=\begin{bmatrix}1\\ 0 \\ 0 \\ \vdots \\ 0\end{bmatrix}   , T(2)=\begin{bmatrix}0\\ 1 \\ 0 \\ \vdots \\ 0\end{bmatrix}   , T(3)=\begin{bmatrix}0\\ 0 \\ 1 \\ \vdots \\ 0\end{bmatrix}  ,  T(k-1)=\begin{bmatrix}0\\ 0 \\ 0 \\ \vdots \\ 1\end{bmatrix} ,   T(k)=\begin{bmatrix}0\\ 0 \\ 0 \\ \vdots \\ 0\end{bmatrix} $$</p>
+<p>這裡我們在介紹一個好用的表示法 $(1\{True\} = 1, 1\{False\} = 0)$，這有點像 if 裡面的判斷式，如果括號裡敘述為真，就輸出 1 ，否就輸出 0。</p>
+<p>我們可以用這個 notation 表達 T(y) 與 y 的關係：</p>
+<p>$$(T(y))i = 1\{y=i\} $$</p>
+<p>這裡說一下為什麼這個關係式成立，可以這樣理解：</p>
+<p>$(T(y))_i$ 指的是 $T(y)$ 這個向量中第 $i$ 個元素的值(可等於 0 or 1)。</p>
+<p>因此，第 $i$ 個元素等於 $1$ 若且唯若 $y=i$。</p>
+<p>舉例來說，如果 $y=1$，$T(1)=\begin{bmatrix} 1 \\ 0 \\ 0 \\ \vdots \\ 0 \end{bmatrix} $ 而 $T(1)$ 的第一個參數等於 $1$。</p>
+<p>以此類推，如果 $y=i$， $T(i)$ 的第 $i$ 個參數便等於 $1$。</p>
+<font size="5">
+！！！再往下看之前最好先確定⾃⼰理解這個關係式
 </font>
+<p>更進一步來說，我們知道 $E(T(y)i) = p(y=i) = \phi_i$(用期望值的定義去想應該不難看出來)</p>
+<p>現在來證明 multinomial 屬於指數族</p>
+<p><img src="/techshare.github.io/2019/02/22/constructGLM/exponentialfamily.png" alt=""></p>
+<p>最後整理一下：</p>
+<p>$$ \eta= \begin{bmatrix} ln(\phi_1/\phi_k) \\ ln(\phi_2/\phi_k) \\ \vdots \\ ln(\phi_{k-1}/\phi_k) \end{bmatrix} $$<br>
+$$ b(y)=1 $$<br>
+$$a(\eta)=-ln(\phi_k)$$</p>
+<p>到此得證 multinomial 屬於指數族。</p>
+</font></p>
+<h1><span id="softmax-function">softmax function</span></h1>
+<p><font size="4"><p><br>
+鑑於我們已經有 $\eta_i$ 和 $\phi_i$ 之間的關係：<br>
+$$ \eta_i=ln(\phi_i/\phi_k) $$</p>
+<p>我們將 $\eta$ 和 $\phi$ 的關係調換：<br>
+$$ \phi_i=\phi_ke^{\eta_i} $$<br>
+$$ \sum_{i=1}^{k}\phi_i=1=\phi_k\sum_{i=1}^{k}e^{\eta_i} $$<br>
+$$ \phi_k=\frac{1}{\sum_{i=1}^ke^{\eta_i}} $$<br>
+$$ \phi_i=\frac{e^{\eta_i}}{\sum_{j=1}^ke^{\eta_j}} $$</p>
+<p>以上這個函數可以表示 $\eta$ 和 $\phi$ 的映射就是 softmax function</p>
+<p>為了完成這個模型，我們首先利用假設三得到：<br>
+$$ p(y=1|x;\theta)=\phi_i=\frac{e^{\theta_iT}}{\sum_{j=1}^{k}e^{\theta_jT}} $$</p>
+<p>綜上這個模型可以解決 $y\in \{1, . . . , k\}$ 的分類問題就叫做 softmax regression。</p>
+<p>再來根據假設二得到 $h(\theta)$：</p>
+<p><img src="/techshare.github.io/2019/02/22/constructGLM/softmax.png" alt=""></p>
+<p>到這裡不難看出來，我們的 $h(x)$ 的輸出是 $1$～$k$ 個分類的發⽣機率的向量。</p>
+<p>（要注意的是，$h(\theta)$ 只有定義 $k-1$ 個維度，第 $k$ 個的機率要用 $1-\sum_{i=1}^{k-1}\phi_i $ 表示。）</p>
+<p>最後，和之前討論過的 ordinary least squares 和 logistic regression一樣，有⼀組 m 筆資料的 training set，要靠學習得到合適的參數 $\theta_i$，我們可以透過求 likelihood function 最⼤化。</p>
+<p>$$ \begin{align}<br>
+l(\theta) &amp;=\sum_{i=1}^{m}ln(p(y^{(i)}|x^{(i)};\theta)) \\<br>
+&amp; =\sum_{i=1}^{m}ln\prod_{l=1}^{k}\left(\frac{e^{\theta_l^Tx^{(i)}}}{\sum_{j=1}^ke^{\theta^T_jx^{(i)}}}\right)^{1\{y^{(i)}=l\}}<br>
+\end{align}$$</p>
+<p>再來就用 gradient ascent 或 Newton’s method 就可以得到 $\theta_i$。</p>
+</font></p>
+<h1><span id="參考資料">參考資料</span></h1>
+<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf</a>
+</li>
+<li><a herf="https://stats.stackexchange.com/questions/40876/what-is-the-difference-between-a-link-function-and-a-canonical-link-function">https://stats.stackexchange.com/questions/40876/what-is-the-difference-between-a-link-function-and-a-canonical-link-function</a>
+</li>
+<li> 參考書籍：Fundamentals of Probability with Stochastic Processes Saeed Ghahramani Thrid Edition (ISBN: 978-1-29203-912-1)
+</li>
+</div>
+</center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
@@ -291,13 +360,9 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/18/logistic/" data-toggle="tooltip" data-placement="top" title="Classification and logistic regression(分類問題與邏輯回歸)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/15/Prob/" data-toggle="tooltip" data-placement="top" title="Probabilistic interpretation(機率上的解釋)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/20/GLM/" data-toggle="tooltip" data-placement="top" title="Generalized Linear Models(廣義線性模型)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -338,6 +403,17 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">建立假設</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Logistic Regression</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Ordinary Least Squares</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">Softmax Regression</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">指數族分佈</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">softmax function</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -352,8 +428,6 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
                     <h5><a href="/techshare.github.io/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/techshare.github.io/tags/#linear regression" title="linear regression">linear regression</a>
-                        
                           <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
                         
                     </div>
@@ -374,8 +448,8 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/16/LWR/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/16/LWR/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/22/constructGLM/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/22/constructGLM/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
