@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例) - Crowttt StudyNote
+          Generative Learning algorithms(生成學習算法) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/24/GLA/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -92,12 +92,14 @@
                             
                               <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                             
+                              <a class="tag" href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
+                            
                         </div>
-                        <h1>Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例)</h1>
+                        <h1>Generative Learning algorithms(生成學習算法)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-23
+                            2019-02-24
                         </span>
                     </div>
                 
@@ -218,62 +220,34 @@
 <div style="WIDTH: 100%; text-align: left">
 <h1><span id="前言">前言</span></h1>
 <font size="4"><p>
-這篇算是上一篇 "建構 GLM 模型" 的番外篇。
-</p><p>如果各位有興趣去看參考資料的話是沒有這部分的，不過因爲上一篇的前言中有用到 poisson 的例子開場，所以基於有始有終的精神我還是把過程補上。</p>
-<p>另一方面我覺得 poisson 在實務上應用滿多的，像是單位時間內網站的造訪次數啊，一個小時內一個路口的車流量啊什麼的…</p>
-<p>跟 poisson 相似的還有例如 beta distribution , gama distribution，各位也可以自己實際推導一次。</p>
+到目前為止，我們談論的演算法都是設法為 $p(y|x;\theta)$ 建立模型，例如邏輯回歸，計算 $h_\theta(x)=g(\theta^Tx)$。
+</p><p>接下來這幾篇要介紹另一種演算法，旨在對 $p(x|y)$ 建模，再利用貝氏定理 $p(y|x)=p(x|y)p(y)/p(x)$ 反求 $p(y|x)$。</p>
 <p></p></font>
-<h1><span id="poisson-regression">poisson regression</span></h1>
-<h2><span id="指數族分佈">指數族分佈</span></h2>
+<h1><span id="判別學習-vs-生成學習">判別學習 v.s. 生成學習</span></h1>
 <font size="4"><p>
-就以一間店單位時間的來客數為例，令 y 為單位時間的來客量，$\lambda$ 為單位時間來客量的期望值
-</p><p>$$\begin{align} p(y) &amp;=\frac{e^{-\lambda}\lambda^y}{y!} \\<br>
-&amp; =exp(ln\frac{e^{-\lambda}\lambda^y}{y!}) \\<br>
-&amp; =exp(ln(e^{-\lambda})+ln(\lambda^y)-ln(y!)) \\<br>
-&amp; =exp(y(ln\lambda)+ln\frac{e^{-\lambda}}{y!})<br>
-\end{align} $$</p>
-<p>對照指數族分佈：<br>
-$$ p(y;\eta)=b(y)exp(\eta^TT(y)-a(\eta)) $$</p>
-<p>$$ b(y)=1 $$<br>
-$$ \eta=ln(\lambda) $$<br>
-$$ a(\eta)=-ln\frac{e^{-\lambda}}{y!} $$</p>
-<p>到此得證 Poisson 屬於指數族。</p>
+舉個例子，現在有一堆貓或狗的圖片，而我們要設計一個分類器，根據一些貓和狗的特徵將這堆圖片分類。
+</p><p>給定一個訓練集，照之前學過的那些回歸算法致力於尋找一條分界區分兩種結果(在我們這個例子就是貓和狗)，當要分辨一張新的照片時，根據特徵判斷它落在分界的哪一邊(貓 or 狗)，這種算法稱作判別學習算法(discriminative learn algorithm)。</p>
+<p>而這裡要介紹的另一種做法，直接根據貓的特徵，建立一組貓的模型; 再根據狗的特徵，建立一組狗的模型，最後，要分辨一張新的照片，我們把新照片的特徵數據拿來和貓和狗的模型做比對，看哪一個比較吻合，這種算法則稱作生成學習算法(generative learn algorithm)。</p>
+<p>生成學習與判別學習最大的不同在於，生成學習對 $p(x|y)$ 建模，所以生成模型是所有特徵的分佈模型 ;<br>
+判別學習則是對 $p(y|x)$ 建模，所以判別模型是給定特徵變量後目標變量的條件機率模型。</p>
 <p></p></font>
-<h2><span id="regression-models">Regression models</span></h2>
+<h1><span id="數學邏輯">數學邏輯</span></h1>
 <font size="4"><p>
-</p><p>已知<br>
-$$ \eta=ln\lambda $$<br>
-所以<br>
-$$ \lambda = e^{\eta} $$</p>
-<p>利用假設二和假設三：<br>
-$$ \begin{align}<br>
-h_\theta(x) &amp;=E[y|x;\theta] \\<br>
-&amp; =\lambda \\<br>
-&amp; =e^{\eta} \\<br>
-&amp; =e^{\theta^Tx}<br>
-\end{align} $$</p>
-<p>到此為止得到 hypothesis</p>
+只要得到 $p(y)$ 和 $p(x|y)$，我們要求的 $p(y|x)$ 根據貝氏定理可以寫成 $p(y|x)=p(x|y)p(y)/p(x)$。
+</p><p>分母的 $p(x)=p(x|y=1)p(y=1)+p(x|y=0)p(y=0)$，所以 $p(x)$ 可以用我們已知的 $p(y)$ 和 $p(x|y)$ 表達。</p>
+<p>事實上，要計算 $p(y|x)$ 來做預測的話，我們不必需要計算分母 $p(x)$，因為：<br>
+$$ arg max_yp(y|x)=arg max_y\frac{p(x|y)p(y)}{p(x)}=arg max_yp(x|y)p(y) $$</p>
+<p>$arg max_xp(x)$ 指的是可使 $p(x)$ 最大的 $x$。</p>
 <p></p></font>
-<h2><span id="最大然似估計">最大然似估計</span></h2>
+<h1><span id="總結">總結</span></h1>
 <font size="4"><p>
-$$ \lambda=E[y|x;\theta]=e^{\theta^Tx} $$
-$$ \begin{align} 
-p(y) &=\frac{e^{-\lambda}\lambda^y}{y!} \\\ 
-& =\frac{e^{y\theta^Tx}e^{-e^{\theta^Tx}}}{y!} 
-\end{align}$$
-</p><p>假設對有 m 個樣本的訓練集：<br>
-$$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_i}}}{y_i!} $$</p>
-<p>$$ l(\theta;x,y)=ln(L(\theta;x,y))=\sum_{i=1}^{m}(y_i\theta^Tx_i-e^{\theta^Tx_i}-ln(y_i!)) $$</p>
-<p>有些小夥伴可能跟我一樣覺得最後那個階乘很礙眼，不過沒關係，那只是常數，對 $\theta$ 微分後就會消失了。</p>
-<p>總而言之倒這裡應該沒什麼問題了，再來就用 gradient ascent 或 Newton’s method 就可以得到 $\theta_i$ 了＾＾</p>
-<p></p></font>
+生成線性迴歸是一類模型，其中有許多例子包括：(GDA)高斯判别算法,隱馬爾可夫模型,樸素貝葉斯分類器...等。
+這篇指是大概介紹生成線性回歸的這個概念，之後應該還要個別介紹一些模型，不過因為篇幅目測都不小，所以每個模型會獨立成一篇來寫。
+</p></font>
 <h1><span id="參考資料">參考資料</span></h1>
 <li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf</a>
 </li>
-<li>
-<a herf="https://en.wikipedia.org/wiki/Poisson_regression">https://en.wikipedia.org/wiki/Poisson_regression</a>
-</li>
-<li> 參考書籍：Fundamentals of Probability with Stochastic Processes Saeed Ghahramani Thrid Edition (ISBN: 978-1-29203-912-1)
+<li><a herf="https://zh.wikipedia.org/wiki/生成模型">https://zh.wikipedia.org/wiki/生成模型</a>
 </li>
 </div>
 </center>
@@ -295,13 +269,9 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/24/GLA/" data-toggle="tooltip" data-placement="top" title="Generative Learning algorithms(生成學習算法)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/22/constructGLM/" data-toggle="tooltip" data-placement="top" title="Constructing GLMs(建構 GML 模型)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/23/constructGLMPoisson/" data-toggle="tooltip" data-placement="top" title="Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -347,7 +317,7 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">poisson regression</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">指數族分佈</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">Regression models</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">最大然似估計</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">判別學習 v.s. 生成學習</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">數學邏輯</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
         
         </div>
       </aside>
@@ -369,6 +339,8 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
                        
                           <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                         
+                          <a class="tag" href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
+                        
                     </div>
                 </section>
                 
@@ -387,8 +359,8 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/24/GLA/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/24/GLA/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

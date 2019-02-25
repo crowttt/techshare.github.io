@@ -18,7 +18,7 @@
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/tags/Generative-Learning-algorithms/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/techshare.github.io/img/header_img/home-bg.jpg') 
-            /*config*/
+            background-image: url('/techshare.github.io/undefined')
+            /*page*/
         
     }
     
@@ -208,384 +208,197 @@
                 post-container
             ">
             
-                <!-- Main Content -->
-
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/24/GLA/">
-        <h2 class="post-title">
-            Generative Learning algorithms(生成學習算法)
-        </h2>
-        <h3 class="post-subtitle">
+                
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <!-- 归档列表 -->
             
-        </h3>
-        <div class="post-content-preview">
             
 
-前言
+             <!-- 归档列表 -->
 
-到目前為止，我們談論的演算法都是設法為 $p(y|x;\theta)$ 建立模型，例如邏輯回歸，計算 $h_\theta(x)=g(\theta^Tx)$。
-接下來這幾篇要介紹另一種演算法，旨在對 $p(x|y)$ 建模，再利用貝氏定理 $p(y|x)=p(x|y)p(y)/p(x)$ 反求 $p(y|x)$。
+            
+            <div class="one-tag-list">
+                <span class="fa fa-calendar-times-o listing-seperator" id="2019">
+                    <span class="tag-text">2019</span>
+                </span>
+                <ul>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-24
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/24/GLA/" style="color: #0085a1">
+                        <span>
+                            Generative Learning algorithms(生成學習算法)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-23
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/23/constructGLMPoisson/" style="color: #0085a1">
+                        <span>
+                            Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-22
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/22/constructGLM/" style="color: #0085a1">
+                        <span>
+                            Constructing GLMs(建構 GML 模型)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-20
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/20/GLM/" style="color: #0085a1">
+                        <span>
+                            Generalized Linear Models(廣義線性模型)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-19
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/19/newton/" style="color: #0085a1">
+                        <span>
+                            Newton’s method(牛頓法)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-18
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/18/logistic/" style="color: #0085a1">
+                        <span>
+                            Classification and logistic regression(分類問題與邏輯回歸)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-16
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/16/LWR/" style="color: #0085a1">
+                        <span>
+                            Locally weighted linear regression(區域加權線性迴歸)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-15
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/15/Prob/" style="color: #0085a1">
+                        <span>
+                            Probabilistic interpretation(機率上的解釋)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-14
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/14/normal-equation/" style="color: #0085a1">
+                        <span>
+                            normal equation(正規化方程)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-12
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/12/lms/" style="color: #0085a1">
+                        <span>
+                            Linear Regression(線性迴歸)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                  <!-- <li class="listing-item">
+                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
+                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
+                  </li> -->
+                 <li>
+                    02-11
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <a href="/techshare.github.io/2019/02/11/supervised_learning/" style="color: #0085a1">
+                        <span>
+                            machine learning(機器學習)
+                        </span>
+                    </a>
+                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
+                </li>
+                
+                </ul>
+            </div>
+            
 
-判別學習 v.s. 生成學習
 
-舉個例子，現在有一堆貓或狗的圖片，......
         </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-24
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
-            
-              <a href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
-            
-        </div>
-    
-
+    </div>
 </div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/23/constructGLMPoisson/">
-        <h2 class="post-title">
-            Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-
-前言
-
-這篇算是上一篇 "建構 GLM 模型" 的番外篇。
-如果各位有興趣去看參考資料的話是沒有這部分的，不過因爲上一篇的前言中有用到 poisson 的例子開場，所以基於有始有終的精神我還是把過程補上。
-另一方面我覺得 poisson 在實務上應用滿多的，像是單位時間內網站的造訪次數啊，一個小時內一個路口的車流量啊什麼的…
-跟 poisson 相似的還有例如 beta distribu......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-23
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/22/constructGLM/">
-        <h2 class="post-title">
-            Constructing GLMs(建構 GML 模型)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-
-前言
-
-舉個例子，要預測一家店每⼩時的來客量，該怎麼建立模型？
-我們知道一家店每小時的來客量符合 possion distribution。
-幸運的是，Poisson 屬於 exponential family distribution，所以我們可以利用 Generalized Linear Model (GLM) 建立模型。
-在這篇我們會主要探討在面對這類問題時，建構 GLM 模型的方......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-22
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/20/GLM/">
-        <h2 class="post-title">
-            Generalized Linear Models(廣義線性模型)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-
-前言
-
-這是一篇滿大的題目，所以先大概說說這篇要介紹什麼
-在前⾯的內容中，我們討論過 regression 和 classification 兩種模型
-回歸模型中: $y|x;\theta \sim \mathcal{N}(\mu, \sigma^2)$ 
-分類模型中: $y|x;\theta \sim Bernoulli(\phi)$ 
-在這篇中，我們將證明這兩種模型都是廣義線性模型 ......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-20
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/19/newton/">
-        <h2 class="post-title">
-            Newton’s method(牛頓法)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-
-什麼是牛頓法
-
-在聽過牛頓法以前，應該不少人之前聽過牛頓勘根法，其實我們這裡要介紹的牛頓法也是一樣的東西，是用來求 $f(x)=0$ 的 $x$ 的一種迭代算法。
-牛頓法的遞迴式有很有用的性質可以求最大 likelihood function $l(\theta)$ 的 $\theta$。
-並且在大多數的場景下相比於批量梯度算法(batch) gradient descent 可以用較少......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-19
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/18/logistic/">
-        <h2 class="post-title">
-            Classification and logistic regression(分類問題與邏輯回歸)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-分類問題
-
-分類問題和之前提過的回歸問題差別在於目標值 y 是離散的。
-這裡我們聚焦在 binary classification problem 上。
-例如要建立一個垃圾訊息篩選器，$x^{(i)}$ 可能是某種垃圾訊息的特徵，$y$ 的結果如果符合就為記為 1 ，不符合就記為 0。
-是 1 的話稱為 negative class，0 的話稱為 positive class，有時會用“+......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-18
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-              <a href="/techshare.github.io/tags/#logistic regression" title="logistic regression">logistic regression</a>
-            
-              <a href="/techshare.github.io/tags/#classification problem" title="classification problem">classification problem</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/16/LWR/">
-        <h2 class="post-title">
-            Locally weighted linear regression(區域加權線性迴歸)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-underfitting ＆ overfitting (欠擬合與過擬合)
-先看以下這幾張圖：
-
-
-對這組數據，分佈型態有拋物線的趨勢，向最左邊的圖，用 $y = \theta_0 + \theta_1x $的 hypothesis 無法很好的估計這組數據。
-相反的，如最右邊的圖，針對這組數據我們可以擬合出⼀個五次方的多項式$y = \theta_0 + \theta_1x + \theta......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-16
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#linear regression" title="linear regression">linear regression</a>
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/15/Prob/">
-        <h2 class="post-title">
-            Probabilistic interpretation(機率上的解釋)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-建立假設
-
-這篇主要介紹為什麼前幾篇提到的線性迴歸算法或者更特定的說 least-squares cost function J 是一個合理的假設。
-我們假設目標函數 $y$ 和 特徵函數 $x$ 的關係如下：
-$$ y^{(i)}=\theta^Tx^{(i)}+\epsilon^{(i)} $$
-假設 $\epsilon^{(i)}$ 指的是 hypothesis 對 $y$ 的估計誤......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-15
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-              <a href="/techshare.github.io/tags/#probability" title="probability">probability</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/14/normal-equation/">
-        <h2 class="post-title">
-            normal equation(正規化方程)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-
-繼上一篇的內容，使 $J(\theta)$ 值最小的參數可以用梯度下降法算出來，這一篇介紹另一個作法，normal equation（正規化方程）。
-normal equation 在效率表現上最好，而且不需要用到迭代或遞迴，這個算法的邏輯就是 $J(\theta)$ 對 $\theta_j's$ 偏微分等於零，不需要設初始 $\theta$ 向量也不需要設學習率。
-待會看到詳細的數學過......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-14
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-              <a href="/techshare.github.io/tags/#normal-equation" title="normal-equation">normal-equation</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/12/lms/">
-        <h2 class="post-title">
-            Linear Regression(線性迴歸)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-
-當我們面對一個學習問題，往往會有多個變數影響結果，繼上一篇的內容，考慮影響房價的因素多了一個臥室的數量。
-
-
-
-x 變成一個在 $\mathbb{R}^2$ 上二維的向量，就這個例子而言，$x_1^{(i)}$  是第 i 棟房子的居住空間， $x_2^{(i)}$ 是第 i 棟房子的臥室數目。
-為了表示每個 x 變數（維度）在監督算法中的影響，我們將Hypothesis 寫成以下這樣
-......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-12
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#linear regression" title="linear regression">linear regression</a>
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    
-        <li class="next">
-            <a href="/techshare.github.io/archives/2/">Older Posts &rarr;</a>
-        </li>
-    
-</ul>
-
-
 
                 <!-- 如果开启评论功能 -->
                 
