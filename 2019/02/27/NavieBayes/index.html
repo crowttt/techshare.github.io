@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Gaussian Discriminant Analysis(高斯判別分析) - Crowttt StudyNote
+          Navie Bayes(樸素貝葉斯算法) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/25/GDA/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/27/NavieBayes/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -95,11 +95,11 @@
                               <a class="tag" href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
                             
                         </div>
-                        <h1>Gaussian Discriminant Analysis(高斯判別分析)</h1>
+                        <h1>Navie Bayes(樸素貝葉斯算法)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-25
+                            2019-02-27
                         </span>
                     </div>
                 
@@ -220,102 +220,76 @@
 <div style="WIDTH: 100%; text-align: left">
 <h1><span id="前言">前言</span></h1>
 <font size="4"><p>
-我們要介紹的第一個生成學習算法叫做 Gaussian discriminant analysis(GDA)高斯判別分析。
-</p><p>雖然名字叫判別分析，但他其實是如假包換的生成學習算法。</p>
-<p>上一篇提過，生成學習算法的重點在於對 $p(x|y)$ 建模，而在這個算法，我們假設 $p(x|y)$ 是多元常態分佈(multivariate normal distribution)。</p>
+在 GDA 裡，特徵向量 $x$ 是連續的實數矩陣，我們這裡討論一個不同的學習算法，其 $x_i’s$ 是離散值。
+</p><p>用一個實際的例子解釋。要建造一個垃圾郵件分類系統，要能判斷郵件是否是廣告還是有用的訊息。</p>
+<p>為了表達信件的特徵我們的 $x_i’s$ 代表字典中的單字是否存在，例如：</p>
+<p><img src="/techshare.github.io/2019/02/27/NavieBayes/wordclass.png" alt=""></p>
+<p>如果 $x_i$ 表示的單字在信件文本中出現， $x_i$ 就輸出為 $1$，反之為 $0$，整個向量的維度根據字典大小 $m$ 決定。</p>
+<p>假設 m=50000，要計算 $p(x|y)$，如果要用多項式分佈準確的建立模型，那我們會有 $2^{5000}$  種可能的輸出，也就需要 $2^{5000} -1$ 維的參數向量，這樣會造成太複雜的計算。</p>
+<p>為了計算 $p(x|y)$ 我們會做一個很強的假設，假設 $x_i’s$ 對 y 是條件獨立（conditionally independent），這個假設就叫做 Naive Bayes (NB) assumption。</p>
 <p></p></font>
-<h1><span id="the-multivariate-normal-distribution多元常態分佈">The multivariate normal distribution(多元常態分佈)</span></h1>
+<h1><span id="conditionally-independent">conditionally independent </span></h1>
 <font size="4"><p>
-在正式開始之前我們先補充一些多元常態分佈的知識。
-</p><p>在 $n$ 個維度下的多維常態分佈以 mean vactor $\mu \in \mathbb{R}^n$ 和 covariance matrix $\Sigma\in\mathbb{R}^{n\times n}$ 為參數，記為 $\mathcal{N}(\mu,\Sigma)$。</p>
-<p>其中 $\Sigma$(covariance) 的意思是 $n$ 個變量倆倆之間的變異數，所以矩陣的維度是 $n\times n$。</p>
-<p>密度函數：<br>
-$$ p(x;\mu,\Sigma)=\frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right) $$</p>
-<p>這個函式可以看成是一為高斯的推廣，形狀一樣是鐘型曲線，而隨機變量 $z$ 在這是一個高維向量。</p>
-<p>其實不用太糾結這個公式，因為不太有機會直接用到，唯一要注意到兩點，“向量” $\mu$ 是高斯分佈的平均值，“矩陣” $\Sigma$ 是共變異數矩陣。</p>
-<p>關於 $\mu$ 和 $\Sigma$：<br>
-$$ E[X]=\int_xxp(x;\mu,\Sigma)dx=\mu $$<br>
-$$ Cov(z)=\Sigma=E[(Z-E[Z])(Z-E[Z])^T] $$<br>
-經過一些推導，$\Sigma$ 可以變成：<br>
-$$\begin{align} \Sigma &amp;=E[(Z-E[Z])(Z-E[Z])^T] \\<br>
-&amp; =E[(Z-E[Z])(Z^T-E[Z]^T)] \\<br>
-&amp; =E[ZZ^T-ZE[Z]^T-E[Z]Z^T+E[Z]E[Z]^T] \\<br>
-&amp; =E[ZZ^T]-2E[Z]E[Z]^T+E[Z]E[Z]^T \\<br>
-&amp; =E[ZZ^T]-E[Z]E[Z]^T<br>
-\end{align} $$</p>
+假設 $y=1$ 表示為垃圾郵件，“buy” 是第 $2087$ 個單字,“price” 是第 $392$ 個單字，在已知 $y=1$ 的情況下，$x_{2087}$ 的值和 $x_{392}$ 彼此獨立。
+</p><p>正式的說 $p(x_{2087}|y)=p(x_{2087}|y, x_{392})$</p>
+<p>要注意到，這並不是說 $x_{2087}$ 和 $x_{392}$ 獨立的：$p(x_{2087})=p(x_{2087} | x_{392})$，而是在 $y=1$ 的情況下，$x_{2087}$ 和 $x_{392}$ 才保證獨立。</p>
 <p></p></font>
-<h1><span id="the-gaussian-discriminant-analysis-model">The Gaussian Discriminant Analysis model</span></h1>
+<h1><span id="naive-bayes-model">Naive Bayes model</span></h1>
 <font size="4"><p>
-當我們有一個分類問題，有一些輸入一個特徵向量 $x$，並且 $x$ 的每個元素都是連續的隨機變數，我們便可以使用 Gaussian Discriminant Analysis，用多維常態分佈對  p(x|y) 建模。
-</p><p>模型如下：<br>
-$$\begin{align} y~ Bernoulli(\phi) \\<br>
-x|y=0 \sim \mathcal{N}(\mu_0,\Sigma) \\<br>
-x|y=1 \sim \mathcal{N}(\mu_1,\Sigma)<br>
-\end{align} $$</p>
-<p>寫出分佈方程式：<br>
-$$\begin{align}<br>
-p(y) &amp;=\phi^y(1-\phi)^{1-y} \\<br>
-p(x|y=0) &amp;=\frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp\left(-\frac{1}{2}(x-\mu_0)^T\Sigma^{-1}(x-\mu_0)\right) \\<br>
-p(x|y=1) &amp;=\frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}}exp\left(-\frac{1}{2}(x-\mu_1)^T\Sigma^{-1}(x-\mu_1)\right)<br>
-\end{align} $$</p>
-<p>這個模型用到的參數有 $\phi, \Sigma, \mu_0 , \mu_1$，雖然有兩種期望值，但在通常情況下，模型中只會用到一種 $\Sigma$。</p>
-<p>log-likelihood:<br>
-$$\begin{align}<br>
-l(\phi,\mu_0,\mu_1,\Sigma) &amp;=ln\prod_{i=1}^{m}p(x^{(i)},y^{(i)};\phi,\mu_0,\mu_1,\Sigma) \\<br>
-&amp; =ln\prod_{i=1}^{m}p(x^{(i)}|y^{(i)};\phi,\mu_0,\mu_1,\Sigma)p(y^{(i)};\phi)<br>
+綜合以上條件，我們能建立以下模型：
+$$\begin{align}
+& p(x_1,\cdots,x_{5000}|y) \\\ 
+& =p(x_1|y)p(x_2|y,x_1)p(x_3|y,x_1,x_2)\cdots p(x_{5000}|y,x_1,\cdots,x_{4999}) \\\ 
+& =p(x_1|y)p(x_2|y)p(x_3|y)\cdots p(x_{5000}|y) \\\ 
+& =\prod_{i=1}^{n}p(x_i|y)
+\end{align}$$
+</p><p>第一個等號是根據機率基本性質<br>
+第二個等號是使用了 Naive Bayes 的假設</p>
+<p>為了把模型表示成好算的形式，我們帶入以下參數：</p>
+<li>$\phi_{i|y=1}=p(x_i=1|y=1)$</li>
+<li>$\phi_{i|y=0}=p(x_i=1|y=0)$</li>
+<li>$\phi_y=p(y=1)$</li>
+<p>像之前一樣，給了一個訓練集，$\{(x^{(i)},y^{(i)});i=1,…,m\}$，我們可以寫出聯合的似然函數：<br>
+$$ L(\phi_y,\phi_{i|y=0},\phi_{i|y=1})=\prod_{i=1}^{m}p(x^{(i)},y^{(i)}) $$</p>
+<p>Likelihood function 最大值與之相應的參數 $\phi_y , \phi_{i|y=0}$ and $\phi_{i|y=1}$ 的最大然似估計的結果如下:<br>
+$$ \phi_{j|y=1}=\frac{\sum_{i=1}^{m}1\{x_j^{(i)}=1\land y^{(i)}=1\}}{\sum^{m}_{i=1}1\{y^{(i)}=1\}} $$<br>
+這是說，在 $y=1$ 的前題下，第 $j$ 個維度為 $1$ 的機率，也就是垃圾郵件的集合裡第 $j$ 的單字出現的機率。</p>
+<p>$$\phi_{j|y=0}=\frac{\sum_{i=1}^{m}1\{x_j^{(i)}=1\land y^{(i)}=0\}}{\sum^{m}_{i=1}1\{y^{(i)}=0\}}$$<br>
+這是說，在 $y=0$ 的前題下，第 $j$ 個維度為 $1$ 的機率，也就是非垃圾郵件的集合裡第 $j$ 的單字出現的機率。</p>
+<p>$$ \phi_y=\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{m} $$<br>
+這是說，y=1 的機率。</p>
+<p>有了以上這些參數，要用新的測試樣本的 $x$ 預測 $y$，我們便可以計算：</p>
+<p>$$\begin{align}<br>
+&amp;p(y=1|x)=\frac{p(x|y=1)p(y=1)}{p(x)} \\<br>
+&amp;=\frac{\left(\prod_{i=1}^{n}p(x_i|y=1)\right)p(y=1)}{\left(\prod_{i=1}^{n}p(x_i|y=1)\right)p(y=1)+\left(\prod_{i=1}^{n}p(x_i|y=0)\right)p(y=0)}<br>
 \end{align}$$</p>
-<p>第一個等號是說，每一個 training example 所指定的 $x$ 和 $y$ 都發生的機率相乘取 $ln$。</p>
-<p>第二個等號是用了貝氏定理。</p>
-<p>要使 likelihood function 最大，模型的參數可寫成如下形式:<br>
-$$\begin{align}<br>
-\phi &amp;=\frac{1}{m}\sum_{i=1}^{m}1\{y^{(i)}=1\} \\<br>
-\mu_0 &amp;=\frac{\sum_{i=1}^{m}1\{y^{(i)}=0\}x^{(i)}}{\sum_{i=1}^{m}1\{y^{(i)}=0\}} \\<br>
-\mu_1 &amp;=\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{\sum_{i=1}^{m}1\{y^{(i)}=1\}} \\<br>
-\Sigma &amp;=\frac{1}{m}\sum_{i=1}^{m}(x^{(i)}-\mu_{y^{(i)}})(x^{(i)}-\mu_{y^{(i)}})^T<br>
-\end{align} $$</p>
-<p>$\phi$ 就是 $y=1$ 的樣本數除以總樣本數<br>
-$\mu_0$ 就是 $y=0$ 的樣本的 x 的平均<br>
-$\mu_1$ 同上<br>
-$\Sigma$ 前面的公式提過</p>
-<p>畫成圖來看，此演算法如下圖，有兩個高斯分佈中心，分別匹配兩類目標值(0,1)</p>
-<p><img src="/techshare.github.io/2019/02/25/GDA/multi_gaussian.png" alt=""></p>
-<p>兩個高斯分佈的輪廓線分別表示兩類結果 $y\in\{0,1\}$，可以注意到的是，這兩個高斯分佈相位，形狀都一樣，因為他們共用一個 $\Sigma$。</p>
-<p>不一樣的地方是兩個高斯分佈的中心不同，因為平均值一個是 $\mu_0$ 一個是 $\mu_1$。</p>
-<p>中間的直線表示 $p(y=1|x)=0.5$，如果輸入一個新的 $x$ 特徵向量，$y$ 落在其中一邊，我們會藉此判斷 $y=0$ 或 $y=1$。</p>
+<p>算完後在看看哪個分類的機率比較高就大功告成了。</p>
+<p>因為這裡的例子 $x$ 是一個二元值所以 $p(x_i|y)$ 是 bernoulli。$x_i$ 不一定只有兩種，可以是 $\{1,2,\cdots,k_i\}$，這個時候就可能用到多項式來為 $p(x_i|y)$ 建模。</p>
+<p>還有，如果輸入的數據是連續值，我們常常會將它離散化(discretize)。</p>
+<p>舉個例子，還是最一開始房價的例子，我們把居住面積這項連續的特徵變量切成若干個區間，如下表：</p>
+<p><img src="/techshare.github.io/2019/02/27/NavieBayes/houseprice.png" alt=""></p>
+<p>如果一筆數據的居住面積是 $590$ 那麼這筆數據的“居住面積”這個特徵的輸出為 $2$。</p>
 <p></p></font>
-<h1><span id="discussion-gda-and-logistic-regression">Discussion: GDA and logistic regression</span></h1>
+<h1><span id="laplace-smoothing">Laplace smoothing</span></h1>
 <font size="4"><p>
-GDA model 和 logistic regression 有一些有意思的關係
-</p><p>如果把 $p(y=1|x; \phi, \mu_0, \mu_1, \sigma)$ 視為 $x$ 的函數，會發現它可以表達成：<br>
-$$ p(y=1|x;\phi,\mu_0,\mu_1,\Sigma)=\frac{1}{1+exp(-\theta^Tx)} $$</p>
-<p>$\theta$ 是一些用  $\phi$, $\mu_0$, $\mu_1$, $\Sigma$ 組合的方程式</p>
-<p>而我們發現居然是 logistic function ???</p>
-<p><img src="/techshare.github.io/2019/02/25/GDA/gaussian_2d.png" alt=""></p>
-<p>因為沒有具體的數據，用程式畫有點困難，所以用影片中的截圖說明。</p>
-<p>令橫軸為 $x$，縱軸為 $p(y=1|x)$，兩個高斯分佈分別表示兩種目標值的分佈狀況，左邊的是 $y=0$，右邊的是 $y=1$。</p>
-<p>在這個例子中，如果 $x$ 很小，那他明顯的是屬於左邊的高斯分佈，所以 $p(y=1|x)$ 也會很小。</p>
-<p>然而隨著 $x$ 變大，越來越靠右，$p(y=1|x)$ 也越來越大，直到 $x$ 處於極右的位置，$p(y=1|x)$ 也會幾乎達到最大值 1。</p>
-<font size="5">
-那麼問題來了，既然兩種模型這麼相似，我們該怎麼選擇呢？？？
-</font>
-<p>GDA 和 logistic regression 本質上是不一樣的，他假設， $p(y|x)$ 是 logistic regression 而且 $p(x|y)$ 是多維常態分佈。</p>
-<p>如果 $p(x|y)$ 是常態分佈，$p(y|x)$ 就必是 logistic function，而此結論不可逆。<br>
-也就是說，$p(y|x)$ 是 logistic function 不代表 $p(x|y)$ 是常態分佈，而可以是各種分布。</p>
-<p>舉個例子就能明白：<br>
-$$\begin{align}<br>
-x|y=1 \sim Poisson(\lambda_1) \\<br>
-x|y=0 \sim Poisson(\lambda_0)<br>
-\end{align} $$<br>
-$$ \Rightarrow p(y=1|x) \in logistic，因為 y 不是 1 就是 0$$。</p>
-<p>結論就是 GDA 比起 logistic regression 給了更強的假設，對樣本的性質也更敏感，好處就是如果樣本確實是常態分佈(充分符合GDA的假設)，他會有非常好的結果。</p>
-<p>更直接的說，如果訓練樣本的數量非常大，GDA會表現得比較好。</p>
+考慮到一個實際的情況，如果有一個單字有收錄在字典裡，但是在訓練集中沒有出現過。
+</p><p>那麼 $p(x|y)=\prod_{i=1}^{n}p(x_i|y=1)=0$ 而且 $p(x|y=0)=\prod_{i=1}^{n}p(x_i|y=0)=0$</p>
+<p>因此 likelihood function $p(y=1|x)=0/(0+0)$</p>
+<p>這看起來十分荒謬，如果說一個單字以前沒出現過，我們就判斷他未來不可能會出現，這很明顯不合理。</p>
+<p>給定一個 m 個樣本的訓練集 $\{z^{(1)},\cdots,z^{(m)}\}$，根據傳統定義的最大然似估計 $\phi_j=\frac{\sum_{i=1}^{m}1\{z^{(i)}=j\}}{m}$</p>
+<p>用 Laplace smoothing 重新定義 $\phi_j=\frac{\sum_{i=1}^{m}1\{z^{(i)}=j\}+1}{m+k}$</p>
+<p>這個 $k$ 表示的是 $y$ 可能的結果數量，像這裡垃圾郵件的例子，$y=\{0,1\}$，所以 $k=2$</p>
+<p>靠這個修正我們就可以避免 $\phi_j = 0$ 的情況。</p>
+<p></p></font>
+<h1><span id="總結">總結</span></h1>
+<font size="4"><p>
+NB algorithm 要做的就是用測試的特徵向量利用貝氏定律的公式 $p(y=1|x)=p(x|y=1)p(y=1)/p(x)$ 預測在給定一組特定的特徵向量下，$y=1$ 的機率。
+</p><p>而這個公式要用到的參數 $p(x|y=1)$, $p(y=1)$, $p(x)$ 則靠訓練集去學習取得，而取得的方法根據 $x$ 具體的分佈情況採用不同的機率模型。</p>
+<p></p></font>
 <h1><span id="參考資料">參考資料</span></h1>
 <li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes2.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes2.pdf<a>
 </a></a></li>
-<li><a herf="https://zh.wikipedia.org/wiki/多元正态分布">https://zh.wikipedia.org/wiki/多元正态分布</a></li>
-<p></p></font>
-</div>
-</center>
+</div></center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
@@ -335,13 +309,9 @@ $$ \Rightarrow p(y=1|x) \in logistic，因為 y 不是 1 就是 0$$。</p>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/27/NavieBayes/" data-toggle="tooltip" data-placement="top" title="Navie Bayes(樸素貝葉斯算法)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/24/GLA/" data-toggle="tooltip" data-placement="top" title="Generative Learning algorithms(生成學習算法)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/25/GDA/" data-toggle="tooltip" data-placement="top" title="Gaussian Discriminant Analysis(高斯判別分析)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -387,7 +357,7 @@ $$ \Rightarrow p(y=1|x) \in logistic，因為 y 不是 1 就是 0$$。</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">The multivariate normal distribution(多元常態分佈)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">The Gaussian Discriminant Analysis model</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Discussion: GDA and logistic regression</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">conditionally independent </span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Naive Bayes model</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Laplace smoothing</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
         
         </div>
       </aside>
@@ -429,8 +399,8 @@ $$ \Rightarrow p(y=1|x) \in logistic，因為 y 不是 1 就是 0$$。</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/25/GDA/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/25/GDA/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/27/NavieBayes/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/27/NavieBayes/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
