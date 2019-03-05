@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Navie Bayes(樸素貝葉斯算法) - Crowttt StudyNote
+          多項式事件模型(multinomial event model) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/27/NavieBayes/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/03/03/MulitEventModel/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -95,11 +95,11 @@
                               <a class="tag" href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
                             
                         </div>
-                        <h1>Navie Bayes(樸素貝葉斯算法)</h1>
+                        <h1>多項式事件模型(multinomial event model)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-27
+                            2019-03-03
                         </span>
                     </div>
                 
@@ -220,76 +220,57 @@
 <div style="WIDTH: 100%; text-align: left">
 <h1><span id="前言">前言</span></h1>
 <font size="4"><p>
-在 GDA 裡，特徵向量 $x$ 是連續的實數矩陣，我們這裡討論一個不同的學習算法，其 $x_i’s$ 是離散值。
-</p><p>用一個實際的例子解釋。要建造一個垃圾郵件分類系統，要能判斷郵件是否是廣告還是有用的訊息。</p>
-<p>為了表達信件的特徵我們的 $x_i’s$ 代表字典中的單字是否存在，例如：</p>
-<p><img src="/techshare.github.io/2019/02/27/NavieBayes/wordclass.png" alt=""></p>
-<p>如果 $x_i$ 表示的單字在信件文本中出現， $x_i$ 就輸出為 $1$，反之為 $0$，整個向量的維度根據字典大小 $m$ 決定。</p>
-<p>假設 m=50000，要計算 $p(x|y)$，如果要用多項式分佈準確的建立模型，那我們會有 $2^{5000}$  種可能的輸出，也就需要 $2^{5000} -1$ 維的參數向量，這樣會造成太複雜的計算。</p>
-<p>為了計算 $p(x|y)$ 我們會做一個很強的假設，假設 $x_i’s$ 對 y 是條件獨立（conditionally independent），這個假設就叫做 Naive Bayes (NB) assumption。</p>
+作為關於生成學習的最後一篇，我們再介紹一個生成學習算法，這個算法稱為多項式事件模型。
+繼上一篇介紹的樸素貝葉斯，輸入一個文本樣本會產生一個 $n$ 維的向量 $x^{(i)}$(假設詞典有 $n$ 個詞彙)，其中每一個元素等於 $0$ or $1$，分別表示這個詞彙在文本中是否有出現。這種模型被稱為“多元伯努利模型”(mulit-variative bernoulli model)。
+</p><p>這個模型有一個明顯的弱點，在於他無法表達辭彙在文本中出現的次數，而多項式事件模型就是針對這點的改良。</p>
 <p></p></font>
-<h1><span id="conditionally-independent">conditionally independent </span></h1>
+<h1><span id="多項式事件模型">多項式事件模型</span></h1>
 <font size="4"><p>
-假設 $y=1$ 表示為垃圾郵件，“buy” 是第 $2087$ 個單字,“price” 是第 $392$ 個單字，在已知 $y=1$ 的情況下，$x_{2087}$ 的值和 $x_{392}$ 彼此獨立。
-</p><p>正式的說 $p(x_{2087}|y)=p(x_{2087}|y, x_{392})$</p>
-<p>要注意到，這並不是說 $x_{2087}$ 和 $x_{392}$ 獨立的：$p(x_{2087})=p(x_{2087} | x_{392})$，而是在 $y=1$ 的情況下，$x_{2087}$ 和 $x_{392}$ 才保證獨立。</p>
-<p></p></font>
-<h1><span id="naive-bayes-model">Naive Bayes model</span></h1>
-<font size="4"><p>
-綜合以上條件，我們能建立以下模型：
-$$\begin{align}
-& p(x_1,\cdots,x_{5000}|y) \\\ 
-& =p(x_1|y)p(x_2|y,x_1)p(x_3|y,x_1,x_2)\cdots p(x_{5000}|y,x_1,\cdots,x_{4999}) \\\ 
-& =p(x_1|y)p(x_2|y)p(x_3|y)\cdots p(x_{5000}|y) \\\ 
-& =\prod_{i=1}^{n}p(x_i|y)
-\end{align}$$
-</p><p>第一個等號是根據機率基本性質<br>
-第二個等號是使用了 Naive Bayes 的假設</p>
-<p>為了把模型表示成好算的形式，我們帶入以下參數：</p>
-<li>$\phi_{i|y=1}=p(x_i=1|y=1)$</li>
-<li>$\phi_{i|y=0}=p(x_i=1|y=0)$</li>
-<li>$\phi_y=p(y=1)$</li>
-<p>像之前一樣，給了一個訓練集，$\{(x^{(i)},y^{(i)});i=1,…,m\}$，我們可以寫出聯合的似然函數：<br>
-$$ L(\phi_y,\phi_{i|y=0},\phi_{i|y=1})=\prod_{i=1}^{m}p(x^{(i)},y^{(i)}) $$</p>
-<p>Likelihood function 最大值與之相應的參數 $\phi_y , \phi_{i|y=0}$ and $\phi_{i|y=1}$ 的最大然似估計的結果如下:<br>
-$$ \phi_{j|y=1}=\frac{\sum_{i=1}^{m}1\{x_j^{(i)}=1\land y^{(i)}=1\}}{\sum^{m}_{i=1}1\{y^{(i)}=1\}} $$<br>
-這是說，在 $y=1$ 的前題下，第 $j$ 個維度為 $1$ 的機率，也就是垃圾郵件的集合裡第 $j$ 的單字出現的機率。</p>
-<p>$$\phi_{j|y=0}=\frac{\sum_{i=1}^{m}1\{x_j^{(i)}=1\land y^{(i)}=0\}}{\sum^{m}_{i=1}1\{y^{(i)}=0\}}$$<br>
-這是說，在 $y=0$ 的前題下，第 $j$ 個維度為 $1$ 的機率，也就是非垃圾郵件的集合裡第 $j$ 的單字出現的機率。</p>
-<p>$$ \phi_y=\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{m} $$<br>
-這是說，y=1 的機率。</p>
-<p>有了以上這些參數，要用新的測試樣本的 $x$ 預測 $y$，我們便可以計算：</p>
-<p>$$\begin{align}<br>
-&amp;p(y=1|x)=\frac{p(x|y=1)p(y=1)}{p(x)} \\<br>
-&amp;=\frac{\left(\prod_{i=1}^{n}p(x_i|y=1)\right)p(y=1)}{\left(\prod_{i=1}^{n}p(x_i|y=1)\right)p(y=1)+\left(\prod_{i=1}^{n}p(x_i|y=0)\right)p(y=0)}<br>
-\end{align}$$</p>
-<p>算完後在看看哪個分類的機率比較高就大功告成了。</p>
-<p>因為這裡的例子 $x$ 是一個二元值所以 $p(x_i|y)$ 是 bernoulli。$x_i$ 不一定只有兩種，可以是 $\{1,2,\cdots,k_i\}$，這個時候就可能用到多項式來為 $p(x_i|y)$ 建模。</p>
-<p>還有，如果輸入的數據是連續值，我們常常會將它離散化(discretize)。</p>
-<p>舉個例子，還是最一開始房價的例子，我們把居住面積這項連續的特徵變量切成若干個區間，如下表：</p>
-<p><img src="/techshare.github.io/2019/02/27/NavieBayes/houseprice.png" alt=""></p>
-<p>如果一筆數據的居住面積是 $590$ 那麼這筆數據的“居住面積”這個特徵的輸出為 $2$。</p>
-<p></p></font>
-<h1><span id="laplace-smoothing">Laplace smoothing</span></h1>
-<font size="4"><p>
-考慮到一個實際的情況，如果有一個單字有收錄在字典裡，但是在訓練集中沒有出現過。
-</p><p>那麼 $p(x|y)=\prod_{i=1}^{n}p(x_i|y=1)=0$ 而且 $p(x|y=0)=\prod_{i=1}^{n}p(x_i|y=0)=0$</p>
-<p>因此 likelihood function $p(y=1|x)=0/(0+0)$</p>
-<p>這看起來十分荒謬，如果說一個單字以前沒出現過，我們就判斷他未來不可能會出現，這很明顯不合理。</p>
-<p>給定一個 m 個樣本的訓練集 $\{z^{(1)},\cdots,z^{(m)}\}$，根據傳統定義的最大然似估計 $\phi_j=\frac{\sum_{i=1}^{m}1\{z^{(i)}=j\}}{m}$</p>
-<p>用 Laplace smoothing 重新定義 $\phi_j=\frac{\sum_{i=1}^{m}1\{z^{(i)}=j\}+1}{m+k}$</p>
-<p>這個 $k$ 表示的是 $y$ 可能的結果數量，像這裡垃圾郵件的例子，$y=\{0,1\}$，所以 $k=2$</p>
-<p>靠這個修正我們就可以避免 $\phi_j = 0$ 的情況。</p>
-<p></p></font>
-<h1><span id="總結">總結</span></h1>
-<font size="4"><p>
-NB algorithm 要做的就是用測試的特徵向量利用貝氏定律的公式 $p(y=1|x)=p(x|y=1)p(y=1)/p(x)$ 預測在給定一組特定的特徵向量下，$y=1$ 的機率。
-</p><p>而這個公式要用到的參數 $p(x|y=1)$, $p(y=1)$, $p(x)$ 則靠訓練集去學習取得，而取得的方法根據 $x$ 具體的分佈情況採用不同的機率模型。</p>
+給定一個文本樣本，可以表示成一個向量，$\begin{bmatrix}x^{(i)}_1 \\\ x^{(i)}_2 \\\ \vdots \\\ x^{(i)}_{n_i} \end{bmatrix}$，這個 $n_i$ 指的是文本的單字
+</p><p>數，假設文本有三百個單字，那 $x^{(i)}$ 就是一個三百個維度的向量。</p>
+<p>向量中每一個元素的值都指向一個字典的索引(index)，舉裡來說，如果文本的前幾個字是 “To be or not to be” ，而 “to”,“be”,&quot;or,“not” 在字典中的索引分別是</p>
+<p>3508,74,2943,2560，那麼，這個向量 $x^{(i)}$ 就是 $\begin{bmatrix} 3508 \\ 74 \\ 2943 \\ 2560 \\ \vdots \\ x^{(i)}_{n_i}\end{bmatrix}$。</p>
+<p>從這就可以看出，$x^{(i)}$ 的每個分量不再是二元隨機變量，他們是指向一個大得多的取值空間。</p>
+<p>假設有人對你發送一封 $300$ 字的信，這封信由哪 $300$ 字組成則根據發送者是否對你發送垃圾郵件，也就是說，信中的字會根據是否是垃圾郵件而有不同的概率分佈，假設商家要對你發送廣告，那麼信中很有可能會有 “discount”,“buy”,“sale”… 等字眼。如果是學校或工作上的通知那就很有可能會出現 “meeting”,“class”,“deadline”… 一類的字。</p>
+<p>在這種情況下我們的生成模型是：<br>
+$$ p(x,y)=\prod_{i=1}^{n}p(x_i|y)p(y) $$<br>
+$p(y)$ 代表信件是否是垃圾郵件的機率，$n$ 代表信件的長度，而每一個字的生成都是基於已知 $y$ 的情況下的條件分佈。</p>
+<p>因此我們會有參數如下：<br>
+$$ \phi_{k|y=1}=p(x_j=k|y=1) $$<br>
+$$ \phi_{k|y=0}=p(x_j=k|y=0) $$<br>
+$$ \phi_y=p(y=1) $$</p>
+<p>第一和第二個參數是一樣的，指的是在 $y=1$ 或 $y=0$ 的情況下，下一個單字是某個索引值 $k$ 的機率。</p>
+<p>給定一個訓練集，我們可以寫出聯合的似然函數：<br>
+$$\begin{align} &amp;l(\phi_{k|y=1},\phi_{k|y=0},\phi_y) \\<br>
+&amp;=ln\prod_{i=1}^{m}p(x^{(i)},y^{(i)};\phi_{k|y=1},\phi_{k|y=0},\phi_y) \\<br>
+&amp;=ln\prod_{i=1}^{m}\prod_{j=1}^{n_i}p(x_j^{(i)}|y^{(i)};\phi_{k|y=1},\phi_{k|y=0},\phi_y)p(y^{(i)};\phi_y)<br>
+\end{align} $$</p>
+<p>經過最大然似估計可以得到：<br>
+$$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=1\}}{\sum_{i=1}^{m}1\{y^{(i)}=1 \}n_i} \\ \\<br>
+&amp;\phi_{k|y=0}= \frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=0\}}{\sum_{i=1}^{m}1\{y^{(i)}=0 \}n_i} \\ \\<br>
+&amp;\phi_y =\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{m} \end{align}$$</p>
+<p>$n_i$ 指的是第 $i$ 封郵件的單字數量，$m$ 表示訓練集中有幾封郵件。</p>
+<p>第一個參數 $\phi_{k|y=1}$ 的分子是表示對每一封郵件的每一個單字，已知是垃圾郵件的情況下為 $k$的次數總和，或是理解成單字 $k$ 出現在垃圾郵件中的次數。</p>
+<p>分母表示所有垃圾郵件單字數的總和。</p>
+<p>所以整個參數可以理解為單字 $k$ 在所有垃圾郵件中出現的比例。</p>
+<p>第二個參數也相同，只是是在 $y=0$ 的情況下，則第三個參數很明顯就更不用說了。</p>
+<p>帶入上一篇講的 Laplace smoothing 可以寫成：<br>
+$$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=1\}+1}{\sum_{i=1}^{m}1\{y^{(i)}=1 \}n_i+|V|} \\ \\<br>
+&amp;\phi_{k|y=0}= \frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=0\}+1}{\sum_{i=1}^{m}1\{y^{(i)}=0 \}n_i+|V|} \\ \\<br>
+&amp;\phi_y =\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{m} \end{align}$$</p>
+<p>$|V|$ 是隨機變量 $x_i$ 可以取值的空間，如果字典有 $10000$ 個詞彙就帶入 $10000$。</p>
+<p>有了以上這些參數後，當我們有一封新郵件，要預測他是否是垃圾郵件，我們尋訪郵件的每一個單字，假設第一個單字是 “Hello”，我們就看 $\phi_{“Hello”|y=1}$，也就是假設這封郵件是垃圾郵件，那麼 “Hello” 出現的概率是多少，直觀的看，這個值越大，這封信是垃圾郵件的機率也就越大。</p>
+<p>相同的做法對每一個單字做一次再把他們連乘起來，就可以得到在判斷是垃圾郵件的情況下，整封郵件生成出來的慨率。這也就是我們要求的 $p(x_i|y)$。</p>
+<p>根據貝氏定理可以得到以下公式：</p>
+<p>$$\begin{align} p(y=1|x)= &amp;\frac{p(x|y=1)p(y=1)}{p(x)} \\<br>
+&amp;=\frac{(\prod_{i=1}^{n}p(x_i=k|y=1))p(y=1)}{(\prod_{i=1}^{n}p(x_i=k|y=1))p(y=1)+(\prod_{i=1}^{n}p(x_i=k|y=0))p(y=0)}<br>
+\end{align} $$</p>
 <p></p></font>
 <h1><span id="參考資料">參考資料</span></h1>
 <li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes2.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes2.pdf<a>
 </a></a></li>
-</div></center>
+</div>
+</center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
  MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
@@ -309,13 +290,9 @@ NB algorithm 要做的就是用測試的特徵向量利用貝氏定律的公式 
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/03/03/MulitEventModel/" data-toggle="tooltip" data-placement="top" title="多項式事件模型(multinomial event model)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/25/GDA/" data-toggle="tooltip" data-placement="top" title="Gaussian Discriminant Analysis(高斯判別分析)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/02/27/NavieBayes/" data-toggle="tooltip" data-placement="top" title="Navie Bayes(樸素貝葉斯算法)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -361,7 +338,7 @@ NB algorithm 要做的就是用測試的特徵向量利用貝氏定律的公式 
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">conditionally independent </span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Naive Bayes model</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Laplace smoothing</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">總結</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">多項式事件模型</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
         
         </div>
       </aside>
@@ -403,8 +380,8 @@ NB algorithm 要做的就是用測試的特徵向量利用貝氏定律的公式 
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/27/NavieBayes/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/27/NavieBayes/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/03/03/MulitEventModel/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/03/03/MulitEventModel/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -14,7 +14,7 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Locally weighted linear regression(區域加權線性迴歸) - Crowttt StudyNote
+          Locally weighted linear regression(局部加權線性迴歸) - Crowttt StudyNote
         
     </title>
 
@@ -95,7 +95,7 @@
                               <a class="tag" href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
                             
                         </div>
-                        <h1>Locally weighted linear regression(區域加權線性迴歸)</h1>
+                        <h1>Locally weighted linear regression(局部加權線性迴歸)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
@@ -146,14 +146,14 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/about/">About</a>
+                            <a href="/techshare.github.io/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/techshare.github.io/archive/">Archives</a>
+                            <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
                     
@@ -234,9 +234,9 @@
 <li>parametric learning algorithm ：⼀類有固定數⽬的參數⽤以數據擬合的算法，例如線性迴歸，有⼀組固定的參數集合 $\theta$</li>
 <li>non-parametric learning algorithm ：一類參數量會隨訓練集合大小成線性成長的算法。</li>
 </p><p>這裡我們要討論的便是一種非參數學習算法：<br>
-Locally weighted linear regression（區域加權線性迴歸）</p>
+Locally weighted linear regression（局部加權線性迴歸）</p>
 <p></p>
-<p></p><h2><span id="區域加權線性迴歸">區域加權線性迴歸</span></h2><p></p>
+<p></p><h2><span id="局部加權線性迴歸">局部加權線性迴歸</span></h2><p></p>
 <p>
 假設有⾜夠的 training data，使得整個模型比較不受特徵選擇影響。
 </p><p>⼀般的線性迴歸步驟：</p>
@@ -244,7 +244,7 @@ Locally weighted linear regression（區域加權線性迴歸）</p>
 <li>找到使 $\sum_{i=1}^{m}(y^{(i)}-\theta^Tx^{(i)})^2$ 最小的 $\theta$</li>
 <li>回傳 $\theta^Tx$</li>
 </ol>
-<p>區域加權線性迴歸步驟：</p>
+<p>局部加權線性迴歸步驟：</p>
 <ol>
 <li>找到使 $\sum_{i=1}^{m}\omega^{(i)}(y^{(i)}-\theta^Tx^{(i)})^2$ 最小的 $\theta$</li>
 <li>回傳 $\theta^Tx$</li>
@@ -264,7 +264,7 @@ $x^{(i)}$ 指的是訓練集合裡的其中一筆資料，x 是我要關注的�
 <p></p>
 <h1><span id="總結">總結</span></h1>
 <p>
-區域加權線性回歸是我們第一個介紹的非參數算法(non-parametric)，而前幾篇講到的線性迴歸屬於參數算法(parametric)。
+局部加權線性回歸是我們第一個介紹的非參數算法(non-parametric)，而前幾篇講到的線性迴歸屬於參數算法(parametric)。
 </p><p>這兩者最大的不同點在於線性迴歸有一組固定且有限的數字作為參數，所以一旦擬合出一組 $\theta$'s 後，訓練集就不再需要。</p>
 <p>加權線性回歸就不一樣了，我們需要保留整組訓練集，這個 “non-parametric” 的意義大致上就是指<br>
 每次預測的時候 hypothesis 的擬合都要考慮整個訓練集，所以我們用來表示 hypothesis 的東西 “隨訓練集的大小增加而增加，呈線性成長”，呼應了非參數學習的定義。</p>
