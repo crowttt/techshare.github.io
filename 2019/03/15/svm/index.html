@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例) - Crowttt StudyNote
+          Support Vector Machine(支持向量機) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/03/15/svm/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -92,12 +92,14 @@
                             
                               <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                             
+                              <a class="tag" href="/techshare.github.io/tags/#non-linear regression" title="non-linear regression">non-linear regression</a>
+                            
                         </div>
-                        <h1>Construct GLM - The case of poisson distribution(建構 GML 模型以 poisson 為例)</h1>
+                        <h1>Support Vector Machine(支持向量機)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-02-23
+                            2019-03-15
                         </span>
                     </div>
                 
@@ -218,63 +220,93 @@
 <div style="WIDTH: 100%; text-align: left">
 <h1><span id="前言">前言</span></h1>
 <font size="4"><p>
-這篇算是上一篇 "建構 GLM 模型" 的番外篇。
-</p><p>如果各位有興趣去看參考資料的話是沒有這部分的，不過因爲上一篇的前言中有用到 poisson 的例子開場，所以基於有始有終的精神我還是把過程補上。</p>
-<p>另一方面我覺得 poisson 在實務上應用滿多的，像是單位時間內網站的造訪次數啊，一個小時內一個路口的車流量啊什麼的…</p>
-<p>跟 poisson 相似的還有例如 beta distribution , gama distribution，各位也可以自己實際推導一次。</p>
+</p><p>支持向量機模型是一種可以生成非線性分類器的演算法，在介紹非線性分類器前，為了引出這個問題，這篇首先要先介紹分類算法中兩種對於分類的直觀理解。</p>
+<p>有了這些基礎，接下來的幾篇會對支持向量機做更深入的介紹。</p>
+<p>第一種是需要考慮 logistic regression，我們用一個 sigmoid function 表示 $y=1$ 的概率，如下圖。</p>
+<p><img src="/techshare.github.io/2019/03/15/svm/logistic-function.png" alt=""></p>
+<p>其公式為：$h(\theta)=p(y|x;\theta)=g(\theta^Tx)=\frac{1}{1+e^{\theta^Tx}}$</p>
+<p>我們可以這樣理解這個演算法：</p>
+<ul>
+<li>預測結果 $y=1$   $iff$   $\theta^Tx \ge 0$</li>
+<li>預測結果 $y=0$   $iff$   $\theta^Tx \gt 0$</li>
+</ul>
+<p>那麼對於 $\theta^Tx \gt\gt 0$ 可以表示我們非常確定 $y=1$。<br>
+同理，如果 $\theta^Tx \lt\lt 0$ 可以表示我們很確定 $y=0$。</p>
+<p>之後講到函數間隔(functional margin) 這個概念的時候會再講到。</p>
+<p>另一種直觀理解如下圖：</p>
+<p><img src="/techshare.github.io/2019/03/15/svm/classification.png" alt=""></p>
+<p>假設 $x’s$ 表示 $y=1$，$o’s$ 表示 $y=0$。</p>
+<p>中間那條線作為兩類資料的邊界，分割兩個類別。</p>
+<p>圖中有 $A,B,C$ 三個點，其中 $A$ 非常遠離邊界，我們有充足的信心說在 $A$ 點，$y=1$。<br>
+而 $C$ 點在邊界附近，因此邊界若有很小的變化，點 $C$ 就有可能被判斷成 $y=0$。<br>
+最後 $B$ 在 $A$ 和 $C$ 之間，所以在點 $B$，$y=1$ 的信心值也在 $A,B$ 之間。</p>
+<p>這個部分之後講到幾何間隔(geomatric margin) 會再詳細介紹。</p>
 <p></p></font>
-<h1><span id="poisson-regression">poisson regression</span></h1>
-<h2><span id="指數族分佈">指數族分佈</span></h2>
+<h1><span id="new-notations">New Notations</span></h1>
 <font size="4"><p>
-就以一間店單位時間的來客數為例，令 y 為單位時間的來客量，$\lambda$ 為單位時間來客量的期望值
-</p><p>$$\begin{align} p(y) &amp;=\frac{e^{-\lambda}\lambda^y}{y!} \\<br>
-&amp; =exp(ln\frac{e^{-\lambda}\lambda^y}{y!}) \\<br>
-&amp; =exp(ln(e^{-\lambda})+ln(\lambda^y)-ln(y!)) \\<br>
-&amp; =exp(y(ln\lambda)+ln\frac{e^{-\lambda}}{y!})<br>
-\end{align} $$</p>
-<p>對照指數族分佈：<br>
-$$ p(y;\eta)=b(y)exp(\eta^TT(y)-a(\eta)) $$</p>
-<p>$$ b(y)=1 $$<br>
-$$ \eta=ln(\lambda) $$<br>
-$$ a(\eta)=-ln\frac{e^{-\lambda}}{y!} $$</p>
-<p>到此得證 Poisson 屬於指數族。</p>
-<p></p></font>
-<h2><span id="regression-models">Regression models</span></h2>
-<font size="4"><p>
-</p><p>已知<br>
-$$ \eta=ln\lambda $$<br>
-所以<br>
-$$ \lambda = e^{\eta} $$</p>
-<p>利用假設二和假設三：<br>
-$$ \begin{align}<br>
-h_\theta(x) &amp;=E[y|x;\theta] \\<br>
-&amp; =\lambda \\<br>
-&amp; =e^{\eta} \\<br>
-&amp; =e^{\theta^Tx}<br>
-\end{align} $$</p>
-<p>到此為止得到 hypothesis</p>
-<p></p></font>
-<h2><span id="最大然似估計">最大然似估計</span></h2>
-<font size="4"><p>
-$$ \lambda=E[y|x;\theta]=e^{\theta^Tx} $$
-$$ \begin{align} 
-p(y) &=\frac{e^{-\lambda}\lambda^y}{y!} \\\ 
-& =\frac{e^{y\theta^Tx}e^{-e^{\theta^Tx}}}{y!} 
-\end{align}$$
-</p><p>假設對有 m 個樣本的訓練集：<br>
-$$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_i}}}{y_i!} $$</p>
-<p>$$ l(\theta;x,y)=ln(L(\theta;x,y))=\sum_{i=1}^{m}(y_i\theta^Tx_i-e^{\theta^Tx_i}-ln(y_i!)) $$</p>
-<p>有些小夥伴可能跟我一樣覺得最後那個階乘很礙眼，不過沒關係，那只是常數，對 $\theta$ 微分後就會消失了。</p>
-<p>總而言之倒這裡應該沒什麼問題了，再來就用 gradient ascent 或 Newton’s method 就可以得到 $\theta_i$ 了＾＾</p>
-<p></p></font>
-<h1><span id="參考資料">參考資料</span></h1>
-<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf</a>
+很遺憾的，我們無法對邏輯回歸和支持向量機以及其他演算法使用同一套符號。
+我們需要對線性分類的符號做一些改動，而這些改動會使之後要介紹的內容更利於理解。
+<ul>
+<li>
+<p>在表示 $y$ 的集合空間時，$y\in\{-1,1\}$(而不是 $\{0,1\}$)，$h$ 的輸出在 $\{-1,+1\}$</p>
 </li>
 <li>
-<a herf="https://en.wikipedia.org/wiki/Poisson_regression">https://en.wikipedia.org/wiki/Poisson_regression</a>
+<p>參數向量的符號不再用 $\theta$ 表示，而是使用 $w,b$，例如：$h_{w,b}(x)=g(w^Tx+b)$</p>
 </li>
-<li> 參考書籍：Fundamentals of Probability with Stochastic Processes Saeed Ghahramani Thrid Edition (ISBN: 978-1-29203-912-1)
+<li>
+<p>$b$ 和之前的 $\theta_0$ 一樣，代表常數項或是截距</p>
 </li>
+<li>
+<p>$w$ 則代表剩下的參數 $\theta_1 \cdots \theta_n$</p>
+</li>
+</ul>
+</p></font>
+<p><fonr size="4"><p></p>
+<h1><span id="functional-margin">Functional margin</span></h1>
+先正式定義 函數間隔(functional margin) 的符號
+$$ \hat\gamma^{(i)}=y^{(i)}(w^Tx+b) $$
+注意到，如果函數間隔 $\hat\gamma^{(i)}$ 很大，也就是說我們對判斷的結果信心很充足
+<p>若 $y^{(i)}=1$ ， $w^Tx+b \gt\gt 0$<br>
+若 $y^{(i)}=0$ ， $w^Tx+b \lt\lt 0$</p>
+<p>還要再注意到，若 $y^{(i)}(w^Tx+b)\ge 0$ 我們便判斷這個假設是正確的</p>
+<p>因此，大的函數間隔表示有信心和正確的預測</p>
+<p></p><h2><span id="正規化條件">正規化條件</span></h2><br>
+給定一個訓練集，我們可以定義這個訓練集的函數區間為每個訓練樣本所對應的 $\hat\gamma$ 最小值</fonr></p>
+<p>$$ \hat\gamma = min_{i=1\cdots m}\hat\gamma^{(i)} $$</p>
+<p>因此就我們現在的需求而言，我們希望最差情況的函數區間可以得到最大值</p>
+<p>實際上，這種直觀理解存在一個問題</p>
+<p>如果把參數 $w,b$ 翻倍 $ w\to 2w $，$ b\to 2b $</p>
+<p>我們可以得到輕易的得到 $\hat\gamma^{(i)} = y^{(i)}(2w^Tx^{(i)}+2b) $</p>
+<p>因此，單純以函數間隔最大化為目標是沒有意義的，因為我們可以用倍數得到任意大的區間值</p>
+<p>我們需要加入一些正規化的條件</p>
+<p>像是把 $w,b$ 變成單位向量，令 $||w||=1$，$(w,b)=(w/||w||,b/||w||)$</p>
+<p>這之後還會在細談。</p>
+<p></p>
+<font size="4"><p>
+</p><h1><span id="geometric-margin">Geometric margin</span></h1>
+先看看以下這張圖
+<p><img src="/techshare.github.io/2019/03/15/svm/geometric-margins.png" alt=""></p>
+<p>$w$ 是分割超平面(hyperplan)上的一個法向量</p>
+<p>圖上 $A$ 代表一個給定一組特徵值 $x^{(i)}$，標籤為 $y=1$ 的點</p>
+<p>他和分割邊界的距離 $\hat\gamma^{(i)}$ 表示為線段 $AB$</p>
+<p>現在問題來了！！！ 要怎麼求 $\hat\gamma{(i)} $ ?</p>
+<p>我們知道 $w/||w||$ 是一個指向 $w$ 方向的單位向量</p>
+<p>因為 $A$ 點代表 $x^{(i)}$，所以 $B = x^{(i)}- \gamma^{(i)}\cdot\frac{w}{||w||} $</p>
+<p>但是這個 $B$ 點位於邊界上，所以 $B$ 點的 $x$ 會滿足 $w^Tx+b=0$</p>
+<p>$$ w^T(x^{(i)}-\gamma^{(i)}\frac{w}{||w||})+b=0 $$</p>
+<p>整理一下，解 $\gamma^{(i)}$</p>
+<p>$$ \gamma^{(i)}=\frac{w^Tx^{(i)}+b}{||w||}=\left(\frac{w}{||w||}\right)^Tx^{(i)}+\frac{b}{||w||} $$</p>
+<p>到這裡我們已經解出幾何間隔的公式，但是這是假設 $A$ 點在 $y=1$ 那一側的情況</p>
+<p>一般的寫法其實也很簡單，只要加上 $y^{(i)}$ 即可</p>
+<p>$$ \gamma^{(i)}=y^{(i)}\left(\left(\frac{w}{||w||}\right)^Tx^{(i)}+\frac{b}{||w||}\right) $$</p>
+<p></p>
+<p>
+綜合這兩種直觀理解，我們可以看到，如果 $||w||＝1$，幾何間隔會等於函數間隔
+</p><p>更進一步，幾何間隔的公式不受參數尺度的影響，因為不管參數 $w,b$ 的乘數是多少，$\frac{w}{||w||}$ 永遠是單位向量</p>
+<p>最後和函數間隔一樣，給定一組訓練集 $S=\{(x^{(i)},y^{(i)});i=1,\cdots ,m \}$</p>
+<p>我們可以定義這個訓練集的函數區間為每個訓練樣本所對應的 $\hat\gamma$ 最小值</p>
+<p>$$ \hat\gamma = min_{i=1\cdots m}\hat\gamma^{(i)} $$</p>
+<p></p></font>
 </div>
 </center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -295,13 +327,9 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/02/24/GLA/" data-toggle="tooltip" data-placement="top" title="Generative Learning algorithms(生成學習算法)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/22/constructGLM/" data-toggle="tooltip" data-placement="top" title="Constructing GLMs(建構 GML 模型)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/03/03/MulitEventModel/" data-toggle="tooltip" data-placement="top" title="Multinomial event model(多項式事件模型)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -347,7 +375,7 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">poisson regression</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">指數族分佈</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">Regression models</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">最大然似估計</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">New Notations</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">Functional margin</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">正規化條件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">Geometric margin</span></a></li></ol>
         
         </div>
       </aside>
@@ -369,6 +397,8 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
                        
                           <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                         
+                          <a class="tag" href="/techshare.github.io/tags/#non-linear regression" title="non-linear regression">non-linear regression</a>
+                        
                     </div>
                 </section>
                 
@@ -387,8 +417,8 @@ $$ p(y|x)=L(\theta;x,y)=\prod_{i=1}^{m}\frac{e^{y_i\theta^Tx_i}e^{-e^{\theta^Tx_
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/02/23/constructGLMPoisson/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/03/15/svm/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/03/15/svm/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

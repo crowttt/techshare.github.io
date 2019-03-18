@@ -44,15 +44,22 @@
     </url>
 
     <url>
-        <loc>https://crowttt.github.io/techshare.github.io/tags/machine-learnin/</loc>
-        <lastmod>2019-03-05T14:45:25.454Z</lastmod>
+        <loc>https://crowttt.github.io/techshare.github.io/tags/Generative-Learning-algorithms/</loc>
+        <lastmod>2019-03-05T14:48:28.198Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://crowttt.github.io/techshare.github.io/tags/Generative-Learning-algorithms/</loc>
-        <lastmod>2019-03-05T14:45:25.454Z</lastmod>
+        <loc>https://crowttt.github.io/techshare.github.io/tags/machine-learnin/</loc>
+        <lastmod>2019-03-18T03:13:22.906Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://crowttt.github.io/techshare.github.io/tags/non-linear-regression/</loc>
+        <lastmod>2019-03-18T03:13:22.906Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
