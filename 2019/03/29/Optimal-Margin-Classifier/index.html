@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Multinomial event model(多項式事件模型) - Crowttt StudyNote
+          SVM-Optimal Margin Classifier(最優間隔分類器) - Crowttt StudyNote
         
     </title>
 
-    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/03/03/MulitEventModel/">
+    <link rel="canonical" href="https://crowttt.github.io/techshare.github.io/techshare.github.io/2019/03/29/Optimal-Margin-Classifier/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/techshare.github.io/css/bootstrap.min.css">
@@ -92,14 +92,16 @@
                             
                               <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                             
-                              <a class="tag" href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
+                              <a class="tag" href="/techshare.github.io/tags/#non-linear regression" title="non-linear regression">non-linear regression</a>
+                            
+                              <a class="tag" href="/techshare.github.io/tags/#SVM" title="SVM">SVM</a>
                             
                         </div>
-                        <h1>Multinomial event model(多項式事件模型)</h1>
+                        <h1>SVM-Optimal Margin Classifier(最優間隔分類器)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Crowt on
-                            2019-03-03
+                            2019-03-29
                         </span>
                     </div>
                 
@@ -220,55 +222,53 @@
 <div style="WIDTH: 100%; text-align: left">
 <h1><span id="前言">前言</span></h1>
 <font size="4"><p>
-作為關於生成學習的最後一篇，我們再介紹一個生成學習算法，這個算法稱為多項式事件模型。
-繼上一篇介紹的樸素貝葉斯，輸入一個文本樣本會產生一個 $n$ 維的向量 $x^{(i)}$(假設詞典有 $n$ 個詞彙)，其中每一個元素等於 $0$ or $1$，分別表示這個詞彙在文本中是否有出現。這種模型被稱為“多元伯努利模型”(mulit-variative bernoulli model)。
-</p><p>這個模型有一個明顯的弱點，在於他無法表達辭彙在文本中出現的次數，而多項式事件模型就是針對這點的改良。</p>
+上一講我們講到我們要做的事是在給定一個訓練及的情況下，找出一個邊界，使他與訓練集的幾何間隔最大化
+</p><p>因為最大化的幾何間隔可以代表信心度很高的假設。</p>
+<p>現在，我們假設有一個訓練集是可以被線性地區分的，也就是</p>
+<p>說可以用一個超平面區分成 postive example 和 negative example</p>
+<p>我們要如何找到這個超平面，可以達到將幾何間隔最大化的要求呢？</p>
 <p></p></font>
-<h1><span id="多項式事件模型">多項式事件模型</span></h1>
-<font size="4"><p>
-給定一個文本樣本，可以表示成一個向量，$\begin{bmatrix}x^{(i)}_1 \\\ x^{(i)}_2 \\\ \vdots \\\ x^{(i)}_{n_i} \end{bmatrix}$，這個 $n_i$ 指的是文本的單字
-</p><p>數，假設文本有三百個單字，那 $x^{(i)}$ 就是一個三百個維度的向量。</p>
-<p>向量中每一個元素的值都指向一個字典的索引(index)，舉裡來說，如果文本的前幾個字是 “To be or not to be” ，而 “to”,“be”,&quot;or,“not” 在字典中的索引分別是</p>
-<p>3508,74,2943,2560，那麼，這個向量 $x^{(i)}$ 就是 $\begin{bmatrix} 3508 \\ 74 \\ 2943 \\ 2560 \\ \vdots \\ x^{(i)}_{n_i}\end{bmatrix}$。</p>
-<p>從這就可以看出，$x^{(i)}$ 的每個分量不再是二元隨機變量，他們是指向一個大得多的取值空間。</p>
-<p>假設有人對你發送一封 $300$ 字的信，這封信由哪 $300$ 字組成則根據發送者是否對你發送垃圾郵件，也就是說，信中的字會根據是否是垃圾郵件而有不同的概率分佈，假設商家要對你發送廣告，那麼信中很有可能會有 “discount”,“buy”,“sale”… 等字眼。如果是學校或工作上的通知那就很有可能會出現 “meeting”,“class”,“deadline”… 一類的字。</p>
-<p>在這種情況下我們的生成模型是：<br>
-$$ p(x,y)=\prod_{i=1}^{n}p(x_i|y)p(y) $$<br>
-$p(y)$ 代表信件是否是垃圾郵件的機率，$n$ 代表信件的長度，而每一個字的生成都是基於已知 $y$ 的情況下的條件分佈。</p>
-<p>因此我們會有參數如下：<br>
-$$ \phi_{k|y=1}=p(x_j=k|y=1) $$<br>
-$$ \phi_{k|y=0}=p(x_j=k|y=0) $$<br>
-$$ \phi_y=p(y=1) $$</p>
-<p>第一和第二個參數是一樣的，指的是在 $y=1$ 或 $y=0$ 的情況下，下一個單字是某個索引值 $k$ 的機率。</p>
-<p>給定一個訓練集，我們可以寫出聯合的似然函數：<br>
-$$\begin{align} &amp;l(\phi_{k|y=1},\phi_{k|y=0},\phi_y) \\<br>
-&amp;=ln\prod_{i=1}^{m}p(x^{(i)},y^{(i)};\phi_{k|y=1},\phi_{k|y=0},\phi_y) \\<br>
-&amp;=ln\prod_{i=1}^{m}\prod_{j=1}^{n_i}p(x_j^{(i)}|y^{(i)};\phi_{k|y=1},\phi_{k|y=0},\phi_y)p(y^{(i)};\phi_y)<br>
-\end{align} $$</p>
-<p>經過最大然似估計可以得到：<br>
-$$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=1\}}{\sum_{i=1}^{m}1\{y^{(i)}=1 \}n_i} \\ \\<br>
-&amp;\phi_{k|y=0}= \frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=0\}}{\sum_{i=1}^{m}1\{y^{(i)}=0 \}n_i} \\ \\<br>
-&amp;\phi_y =\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{m} \end{align}$$</p>
-<p>$n_i$ 指的是第 $i$ 封郵件的單字數量，$m$ 表示訓練集中有幾封郵件。</p>
-<p>第一個參數 $\phi_{k|y=1}$ 的分子是表示對每一封郵件的每一個單字，已知是垃圾郵件的情況下為 $k$的次數總和，或是理解成單字 $k$ 出現在垃圾郵件中的次數。</p>
-<p>分母表示所有垃圾郵件單字數的總和。</p>
-<p>所以整個參數可以理解為單字 $k$ 在所有垃圾郵件中出現的比例。</p>
-<p>第二個參數也相同，只是是在 $y=0$ 的情況下，則第三個參數很明顯就更不用說了。</p>
-<p>帶入上一篇講的 Laplace smoothing 可以寫成：<br>
-$$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=1\}+1}{\sum_{i=1}^{m}1\{y^{(i)}=1 \}n_i+|V|} \\ \\<br>
-&amp;\phi_{k|y=0}= \frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i)}=k\land y^{(i)}=0\}+1}{\sum_{i=1}^{m}1\{y^{(i)}=0 \}n_i+|V|} \\ \\<br>
-&amp;\phi_y =\frac{\sum_{i=1}^{m}1\{y^{(i)}=1\}}{m} \end{align}$$</p>
-<p>$|V|$ 是隨機變量 $x_i$ 可以取值的空間，如果字典有 $10000$ 個詞彙就帶入 $10000$。</p>
-<p>有了以上這些參數後，當我們有一封新郵件，要預測他是否是垃圾郵件，我們尋訪郵件的每一個單字，假設第一個單字是 “Hello”，我們就看 $\phi_{“Hello”|y=1}$，也就是假設這封郵件是垃圾郵件，那麼 “Hello” 出現的概率是多少，直觀的看，這個值越大，這封信是垃圾郵件的機率也就越大。</p>
-<p>相同的做法對每一個單字做一次再把他們連乘起來，就可以得到在判斷是垃圾郵件的情況下，整封郵件生成出來的慨率。這也就是我們要求的 $p(x_i|y)$。</p>
-<p>根據貝氏定理可以得到以下公式：</p>
-<p>$$\begin{align} p(y=1|x)= &amp;\frac{p(x|y=1)p(y=1)}{p(x)} \\<br>
-&amp;=\frac{(\prod_{i=1}^{n}p(x_i=k|y=1))p(y=1)}{(\prod_{i=1}^{n}p(x_i=k|y=1))p(y=1)+(\prod_{i=1}^{n}p(x_i=k|y=0))p(y=0)}<br>
-\end{align} $$</p>
-<p></p></font>
-<h1><span id="參考資料">參考資料</span></h1>
-<li><a herf="https://see.stanford.edu/materials/aimlcs229/cs229-notes2.pdf">https://see.stanford.edu/materials/aimlcs229/cs229-notes2.pdf<a>
-</a></a></li>
+<h1><span id="the-optimal-margin-classifier">The optimal margin classifier</span></h1>
+<font size="4">
+<p>
+我們提出一個最佳化問題：
+$$ max_{\gamma ,w,b}\quad \gamma $$
+$$s.t.\qquad  y^{(i)}(w^Tx^{(i)}+b)\ge\gamma , \qquad i=1,\cdots,m $$
+$$||w||=1$$
+</p><p>$\gamma$ 表示整個訓練集的函數間隔至少是 $\gamma$ ，因此我們欲將 $\gamma$ 最大化這點很好理解</p>
+<p>而加上 $||w||=1$ 這個限制是為了讓函數間隔等於幾何間隔，因此我們也可以保證幾何間隔至少是 $\gamma$</p>
+<p>因此這個問題解出來的參數 $(w,b)$ 也是訓練集對應最大幾何間隔的參數。</p>
+<p></p>
+<p>
+只要解出上述這個最佳化問題就行了，但是 $||w||=1$ 這個限制是很糟的，因為他是非凸函數(non-convex)，因此無法在任何情況下用解最佳化軟體解出來
+</p><p>如果我們要找到一個凸優化問題，我們要能確定像是梯度下降算法這樣的算法不會在局部最優值處收斂。</p>
+<p>因此我們需要改變優化問題的表達方式：<br>
+$$ max_{\gamma ,w,b}\quad \frac{\hat\gamma}{||w||} $$<br>
+$$ s.t.\qquad y^{(i)}(w^Tx^{(i)}+b)\ge\hat\gamma,\qquad  i=1,\cdots,m $$<br>
+這個假設是要找 $\frac{\hat\gamma}{||w||}$ 的最小值</p>
+<p>$\hat\gamma$ 表示最小的函數間隔</p>
+<p>並且，幾何間隔和函數間隔之間的關係為 $\gamma=\hat\gamma /||w||$</p>
+<p>所以這裡講的兩種表述形式其實都是針對同一個優化問題。</p>
+<p>在這種形式中我們擺脫掉 $||w||=1$ 這個糟糕的限制。</p>
+<p>但是我們又出現另一個非凸函數的限制 $\frac{\hat\gamma}{||w||}$</p>
+<p>所以這還不是一個好的表述形式，因此我們還要再變換一下。</p>
+<p>我們前面提過，$w,b$ 可以做任意縮放，不會影響結果</p>
+<p>我們還知道，$\hat\gamma=min \quad  y^{(i)}(w^Tx^{(i)}+b)$</p>
+<p>所以我們提出一個限制，$\hat\gamma=1$</p>
+<p>我們將這個縮放約束加入第二個優化問提的表述中，從而得到以下的優化問題：<br>
+$$ min_{w,b}\quad ||w||^2 $$<br>
+$$ s.t.\qquad y^{(i)}(w^Tx^{(i)}+b)\ge 1 $$</p>
+<p>可以注意到，求 $min_{w,b}$ $||w||^2$ 相當於求 $max$ $\frac{1}{||w||}$，並且，$||w||^2$ 是凸函數(convex)，有利於求最優化問題。</p>
+<p>就目前來說，這就是這個最優間隔分類器的最終形式。</p>
+<p></p>
+</font>
+<h1><span id="總結">總結</span></h1>
+<p><font size="4">
+事實上，對於這樣的二次的凸優化問題，可以將他形式化以後交給一些二次規劃軟件(quadratic program)去求解。
+<p>下一篇，我們將稍微偏離主題，講一些對偶優化的問題，會講到 Lagrange duality</p>
+<p>之後再回來再重這裡導出另外一種最優化問題，會這樣做是因為這類最優化問題具有一些性質，可以將它改成一個很高效的演算法。</p>
+<p>並且會引出對偶化形式，讓我們可以將最優間隔分類器應用在處理無限維度的特徵向量中。<br>
+</p></font></p><p></p>
 </div>
 </center>
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -283,20 +283,15 @@ $$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i
     "HTML-CSS": { availableFonts: ["TeX"] }
   });
 </script>
-
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/techshare.github.io/2019/03/15/svm/" data-toggle="tooltip" data-placement="top" title="SVM-functional marign & geometric marign (支持向量機之函數邊界和幾何邊界)">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/techshare.github.io/2019/02/27/NavieBayes/" data-toggle="tooltip" data-placement="top" title="Navie Bayes(樸素貝葉斯算法)">Next Post &rarr;</a>
+                            <a href="/techshare.github.io/2019/03/15/svm/" data-toggle="tooltip" data-placement="top" title="SVM-functional marign & geometric marign (支持向量機之函數邊界和幾何邊界)">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -342,7 +337,7 @@ $$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">多項式事件模型</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">參考資料</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">前言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">The optimal margin classifier</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">總結</span></a></li></ol>
         
         </div>
       </aside>
@@ -364,7 +359,9 @@ $$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i
                        
                           <a class="tag" href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
                         
-                          <a class="tag" href="/techshare.github.io/tags/#Generative Learning algorithms" title="Generative Learning algorithms">Generative Learning algorithms</a>
+                          <a class="tag" href="/techshare.github.io/tags/#non-linear regression" title="non-linear regression">non-linear regression</a>
+                        
+                          <a class="tag" href="/techshare.github.io/tags/#SVM" title="SVM">SVM</a>
                         
                     </div>
                 </section>
@@ -384,8 +381,8 @@ $$\begin{align} &amp;\phi_{k|y=1}=\frac{\sum_{i=1}^{m}\sum_{j=1}^{n_i}1\{x_j^{(i
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "crowtchen";
-    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/03/03/MulitEventModel/";
-    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/03/03/MulitEventModel/";
+    var disqus_identifier = "https://crowttt.github.io/techshare.github.io/2019/03/29/Optimal-Margin-Classifier/";
+    var disqus_url = "https://crowttt.github.io/techshare.github.io/2019/03/29/Optimal-Margin-Classifier/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

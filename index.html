@@ -136,13 +136,6 @@
 
                         
                         <li>
-                            <a href="/techshare.github.io/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/techshare.github.io/about/">About</a>
                         </li>
                         
@@ -151,6 +144,13 @@
                         
                         <li>
                             <a href="/techshare.github.io/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/techshare.github.io/tags/">Tags</a>
                         </li>
                         
                     
@@ -213,9 +213,51 @@
 
 <div class="post-preview">
 
+    <a href="/techshare.github.io/2019/03/29/Optimal-Margin-Classifier/">
+        <h2 class="post-title">
+            SVM-Optimal Margin Classifier(最優間隔分類器)
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            
+
+前言
+
+上一講我們講到我們要做的事是在給定一個訓練及的情況下，找出一個邊界，使他與訓練集的幾何間隔最大化
+因為最大化的幾何間隔可以代表信心度很高的假設。
+現在，我們假設有一個訓練集是可以被線性地區分的，也就是
+說可以用一個超平面區分成 postive example 和 negative example
+我們要如何找到這個超平面，可以達到將幾何間隔最大化的要求呢？
+
+The optima......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Crowt on
+            2019-03-29
+        </p>
+        <div class="tags">
+            
+              <a href="/techshare.github.io/tags/#machine learnin" title="machine learnin">machine learnin</a>
+            
+              <a href="/techshare.github.io/tags/#non-linear regression" title="non-linear regression">non-linear regression</a>
+            
+              <a href="/techshare.github.io/tags/#SVM" title="SVM">SVM</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/techshare.github.io/2019/03/15/svm/">
         <h2 class="post-title">
-            Support Vector Machine(支持向量機)
+            SVM-functional marign & geometric marign (支持向量機之函數邊界和幾何邊界)
         </h2>
         <h3 class="post-subtitle">
             
@@ -539,44 +581,6 @@ The mu......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/techshare.github.io/2019/02/18/logistic/">
-        <h2 class="post-title">
-            Classification and logistic regression(分類問題與邏輯回歸)
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            
-分類問題
-
-分類問題和之前提過的回歸問題差別在於目標值 y 是離散的。
-這裡我們聚焦在 binary classification problem 上。
-例如要建立一個垃圾訊息篩選器，$x^{(i)}$ 可能是某種垃圾訊息的特徵，$y$ 的結果如果符合就為記為 1 ，不符合就記為 0。
-是 1 的話稱為 negative class，0 的話稱為 positive class，有時會用“+......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Crowt on
-            2019-02-18
-        </p>
-        <div class="tags">
-            
-              <a href="/techshare.github.io/tags/#machine learning" title="machine learning">machine learning</a>
-            
-              <a href="/techshare.github.io/tags/#logistic regression" title="logistic regression">logistic regression</a>
-            
-              <a href="/techshare.github.io/tags/#classification problem" title="classification problem">classification problem</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -613,7 +617,7 @@ The mu......
     <div class="tags">
         
             
-            <a href="/techshare.github.io/tags/#machine learnin" title="machine learnin" rel="7">machine learnin</a>
+            <a href="/techshare.github.io/tags/#machine learnin" title="machine learnin" rel="8">machine learnin</a>
             
         
             
@@ -626,6 +630,10 @@ The mu......
         
             
             <a href="/techshare.github.io/tags/#machine learning" title="machine learning" rel="8">machine learning</a>
+            
+        
+            
+            <a href="/techshare.github.io/tags/#non-linear regression" title="non-linear regression" rel="2">non-linear regression</a>
             
         
             
@@ -690,7 +698,11 @@ The mu......
     <ul>
       
         <li>
-          <a href="/techshare.github.io/2019/03/15/svm/">Support Vector Machine(支持向量機)</a>
+          <a href="/techshare.github.io/2019/03/29/Optimal-Margin-Classifier/">SVM-Optimal Margin Classifier(最優間隔分類器)</a>
+        </li>
+      
+        <li>
+          <a href="/techshare.github.io/2019/03/15/svm/">SVM-functional marign &amp; geometric marign (支持向量機之函數邊界和幾何邊界)</a>
         </li>
       
         <li>
@@ -705,10 +717,6 @@ The mu......
           <a href="/techshare.github.io/2019/02/25/GDA/">Gaussian Discriminant Analysis(高斯判別分析)</a>
         </li>
       
-        <li>
-          <a href="/techshare.github.io/2019/02/24/GLA/">Generative Learning algorithms(生成學習算法)</a>
-        </li>
-      
     </ul>
   </div>
 </h5>
@@ -721,7 +729,7 @@ The mu......
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/techshare.github.io/archives/2019/03/">March 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/techshare.github.io/archives/2019/02/">February 2019</a><span class="archive-list-count">13</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/techshare.github.io/archives/2019/03/">March 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/techshare.github.io/archives/2019/02/">February 2019</a><span class="archive-list-count">13</span></li></ul>
     </div>
 
         <hr>
@@ -730,7 +738,7 @@ The mu......
 
     <h5>categories
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/techshare.github.io/categories/機器學習/">機器學習</a><span class="category-list-count">13</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/techshare.github.io/categories/機器學習/">機器學習</a><span class="category-list-count">14</span></li></ul>
     </div>
 </h5>
         <hr>
